@@ -6,6 +6,7 @@ Công nghệ lập trình hiện đại
 3. [tạo app](#tạo-app)
 4. [kết nối CSDL](#kết-nối-CSDL)
 5. [import trong setting.py](#import-trong-setting.py)
+   - [tạo model truy vấn thử](#tạo-model-truy-vấn-thử)
 
 ## cài đặt django 
 ```
@@ -39,3 +40,17 @@ pip install pymysql
 ```
 ## import trong setting.py 
 (nếu import mà không dùng được: bị gạch chân => ctrl + shift + p => select interpreter => chọn python đang dùng <vì nó chưa ở đúng python>)
+- copy phần này vào biến database
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'coursedb',
+        'USER': 'root',
+        'PASSWORD': 'Admin@123',
+        'HOST': '' # mặc định localhost
+    }
+}
+```
+## tạo model truy vấn thử
+  
