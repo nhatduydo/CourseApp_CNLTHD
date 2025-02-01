@@ -53,4 +53,22 @@ DATABASES = {
 }
 ```
 ## tạo model truy vấn thử
-  
+### trong models
+```
+from django.contrib.auth.models import AbstractUser
+```
+class User(AbstractUser):
+      pass
+```
+```
+class Category(models.Model):
+      name = models.CharField(max_length = 50, null = False)
+      
+      def __str__(self):
+            return self.name
+```
+### trong setting
+```
+AUTH_USER_MODEL = 'courses.User'
+```
+tạm hiểu: dùng AUTH_USER_MODEL của mình để chứng thực chứ không dùng cái của nó
