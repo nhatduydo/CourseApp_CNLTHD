@@ -5,7 +5,7 @@ Công nghệ lập trình hiện đại
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
 3. [tạo app](#tạo-app)
 4. [kết nối CSDL](#kết-nối-CSDL)
-5. [import trong setting.py](#import-trong-setting.py)
+5. [import trong setting.py](#import-trong-setting-.-py)
 
 ## cài đặt django 
 ```
