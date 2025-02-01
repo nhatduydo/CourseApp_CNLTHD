@@ -37,6 +37,5 @@ django-admin startapp courses
 ```
 pip install pymysql
 ```
-
-# import trong setting.py 
+## import trong setting.py 
 (nếu import mà không dùng được: bị gạch chân => ctrl + shift + p => select interpreter => chọn python đang dùng <vì nó chưa ở đúng python>)
