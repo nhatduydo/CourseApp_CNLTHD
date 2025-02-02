@@ -77,8 +77,14 @@ chạy lệnh:
 ```
 python manage.py makemigrations courses
 ```
-nếu xảy ra lỗi: hãy thử: (chưa kiểm tra sửa lỗi được hay không)
+nếu xảy ra lỗi: hãy thử:
 ```
 pip install cryptography
 ```
-
+ra kết quả như dưới là chính xác:
+```
+Migrations for 'courses':
+  courses\migrations\0001_initial.py
+    + Create model Category
+    + Create model User
+```
