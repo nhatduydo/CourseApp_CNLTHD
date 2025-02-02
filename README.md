@@ -1,6 +1,8 @@
 # CourseApp_CNLTHD
 Công nghệ lập trình hiện đại
 # Mục lục
+[tải-các-gói-thư-viện-trong-requirements](#tải-các-gói-thư-viện-trong-requirements)
+[xuất-ra-requirements](#xuất-ra-requirements)
 1. [cài đặt django](#cài-đặt-django)
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
 3. [tạo app](#tạo-app)
@@ -20,6 +22,14 @@ Công nghệ lập trình hiện đại
 11. [tạo-migrations](#tạo-migrations)
 12. [quản-trị-trong-admin](#quản-trị-trong-admin)
 
+## xuất ra requirements
+```
+pip freeze > requirements.txt
+```
+## tải các gói thư viện trong requirements
+```
+pip install -r requirements.txt
+```
 ## cài đặt django 
 ```
 pip install django
