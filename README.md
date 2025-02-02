@@ -16,8 +16,8 @@ Công nghệ lập trình hiện đại
 7. [import trong admin](#import-trong-admin)
 8. [custom theo ý người dùng](#custom-theo-ý-người-dùng)
 9. [tạo class Course trong models](#tạo-class-Course-trong-models)
- - [phân biệt auto now và auto now add](#phân-biệt-auto-now-và-auto-now-add)
- - [sử dụng on delete trong khóa ngoại](#sử-dụng-on-delete-trong-khóa-ngoại)
+    - [phân biệt auto now và auto now add](#phân-biệt-auto-now-và-auto-now-add)
+    - [sử dụng on delete trong khóa ngoại](#sử-dụng-on-delete-trong-khóa-ngoại)
 10. [tạo kế thừa những cái dùng chung thành những class riêng](#tạo-kế-thừa-những-cái-dùng-chung-thành-những-class-riêng)
 11. [tạo-migrations](#tạo-migrations)
 12. [quản-trị-trong-admin](#quản-trị-trong-admin)
@@ -27,7 +27,7 @@ Công nghệ lập trình hiện đại
 16. [tác động database để tạo model](#tác-động-database-để-tạo-model)
 17. [import trong admin](#import-trong-admin)
 18. [chỉnh sửa admin hiển thị ảnh đã upload](#chỉnh-sửa-admin-hiển-thị-ảnh-đã-upload)
-   - [tạo lớp ghi đè](#tạo-lớp-ghi-đè)
+      - [tạo lớp ghi đè](#tạo-lớp-ghi-đè)
 ## xuất ra requirements
 ```
 pip freeze > requirements.txt
