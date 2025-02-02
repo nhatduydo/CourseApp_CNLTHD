@@ -25,7 +25,7 @@ Công nghệ lập trình hiện đại
 14. [ràng buộc meta](#ràng-buộc-meta)
 15. [gắn tag làm many to many](#gắn-tag-làm-many-to-many)
 16. [tác động database để tạo model](#tác-động-database-để-tạo-model)
-
+17. [import trong admin](#import-trong-admin)
 
 
 ## xuất ra requirements
@@ -323,3 +323,43 @@ tags = models.ManyToManyField('Tag')
 ```
 pip install pillow
 ```
+```
+python manage.py makemigrations courses
+```
+```
+python manage.py migrate
+```
+## import trong admin
+```
+from .models import Lesson
+from .models import Tag
+```
+tạo site.register cho lesson và tag 
+```
+admin.site.register(Lesson)
+admin.site.register(Tag)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
