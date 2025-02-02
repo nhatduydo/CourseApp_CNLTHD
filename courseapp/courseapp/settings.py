@@ -87,6 +87,7 @@ DATABASES = {
     }
 }
 
+MEDIA_ROOT = '%s/courses/static' % BASE_DIR
 
 AUTH_USER_MODEL = 'courses.User'
 
