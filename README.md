@@ -69,6 +69,16 @@ class Category(models.Model):
 ```
 ### trong setting
 ```
+```
 AUTH_USER_MODEL = 'courses.User'
 ```
 tạm hiểu: dùng AUTH_USER_MODEL của mình để chứng thực chứ không dùng cái của nó
+chạy lệnh: 
+```
+python manage.py makemigrations courses
+```
+nếu xảy ra lỗi: hãy thử: (chưa kiểm tra sửa lỗi được hay không)
+```
+pip install cryptography
+```
+
