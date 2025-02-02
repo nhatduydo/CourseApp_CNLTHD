@@ -36,7 +36,7 @@ pip freeze > requirements.txt
 ```
 pip install -r requirements.txt
 ```
-# 1. ## cài đặt django 
+1. ## cài đặt django 
 ```
 pip install django
 ```
@@ -49,11 +49,11 @@ cd courseapp
 ```
  python manage.py runserver
 ```
-## kết nối cơ sở dữ liệu mySQL
+2. ## kết nối cơ sở dữ liệu mySQL
 - tạo 1 db mới mới: coursedb
 - utf8mb4/utf8-unicode
 
-## tạo app
+3. ## tạo app
 ```
 django-admin startapp courses
 ```
@@ -62,11 +62,11 @@ django-admin startapp courses
 ```
 'courses.apps.CoursesConfig'
 ```
-## kết nối CSDL
+4. ## kết nối CSDL
 ```
 pip install pymysql
 ```
-## import trong setting.py 
+5. ## import trong setting.py 
 (nếu import mà không dùng được: bị gạch chân => ctrl + shift + p => select interpreter => chọn python đang dùng <vì nó chưa ở đúng python>)
 - copy phần này vào biến database
 ```
@@ -146,20 +146,20 @@ ctrl + z để thoát ra
 ```
 python manage.py runserver
 ```
-## tạo supper user
+6. ## tạo supper user
 ```
 python manage.py createsuperuser
 ```
 sau khi tạo thành công, đăng nhập tài khoản vừa tạo vào web http://127.0.0.1:8000/admin để kiểm tra
 lúc này sẽ thấy file admin.py trong: courses > migrations > admin.py
-## import trong admin
+7. ## import trong admin
 ```
 from .models import Category
 ```
 ```
 admin.site.register(Category)
 ```
-## custom theo ý người dùng 
+8. ## custom theo ý người dùng 
 # trong admin thực hiện ghi đè mặc định
 ```
 class CategoryAdmin(admin.ModelAdmin):
@@ -171,7 +171,7 @@ sau khi ghi đè, gắn phần ghi đè vừa tạo vào trang, để yêu cầu
 ```
 admin.site.register(Category, CategoryAdmin)
 ```
-## tạo class Course trong models
+9. ## tạo class Course trong models
 trong folder courses => tạo folder: static => tạo folder: course
 trong setting.py paste biến MEDIA_ROOT (vị trí nào cũng được)
 ```
@@ -209,7 +209,7 @@ class Course(models.Model):
 - PROTECT: Ngăn không cho xóa bản ghi gốc (gây lỗi nếu cố xóa).
 - DO_NOTHING: Không thực hiện hành động nào, có thể gây lỗi tham chiếu nếu không xử lý thủ công.
 
-## tạo kế thừa những cái dùng chung thành những class riêng
+10. ## tạo kế thừa những cái dùng chung thành những class riêng
 - thực hiện tạo class mới và xóa những cái dùng chung trong class course
 - đây là lớp sử dụng cho các lớp khác, không cần tạo ra => trừu tượng
 - dùng lớp lồng trong lớp class Meta => abstract = True
@@ -241,18 +241,18 @@ class Category(BaseModel):
       def __str__(self):
             return self.name
 ```
-## tạo migrations
+11. ## tạo migrations
 ```
 python manage.py makemigrations courses
 ```
 ```
  python manage.py migrate courses
 ```
-## quản trị trong admin
+12. ## quản trị trong admin
 ```
 from .models import Course
 ```
-## tạo model class lesson
+13. ## tạo model class lesson
 trong folder courses => static => tạo folder: lessons
 ```
 class Lesson(BaseModel):
@@ -261,7 +261,7 @@ class Lesson(BaseModel):
       image = models.ImageField(upload_to='lessons/%Y/%m')
       course = models.ForeignKey(Course, on_delete=models.CASCADE)
 ```
-## ràng buộc meta
+14. ## ràng buộc meta
 thực hiện ràng buộc trong model class Course
 trong class course có class Meta <class con>
 ```
@@ -287,7 +287,7 @@ class Course(BaseModel):
       class Meta:
             unique_together = ('subject', 'category')
 ```
-## gắn tag làm many to many
+15. ## gắn tag làm many to many
 - tạo class model Tag
 - nếu không overwrite to string => tag sẽ hiện thị: tag object(1)
 - khi overwrite lên => ghi đè tên lên => hiển thị tên do user/admin đặt
@@ -323,7 +323,7 @@ tương tự thêm tag với class Course
 tags = models.ManyToManyField('Tag')
 ```
 
-## tác động database để tạo model
+16. ## tác động database để tạo model
 đầu tiền cài thư viện 
 ```
 pip install pillow
@@ -334,7 +334,7 @@ python manage.py makemigrations courses
 ```
 python manage.py migrate
 ```
-## import trong admin
+17. ## import trong admin
 ```
 from .models import Lesson
 from .models import Tag
@@ -344,7 +344,7 @@ tạo site.register cho lesson và tag
 admin.site.register(Lesson)
 admin.site.register(Tag)
 ```
-## chỉnh sửa admin hiển thị ảnh đã upload 
+18. ## chỉnh sửa admin hiển thị ảnh đã upload 
 import vào admin.py
 Django 4.x và các phiên bản trước
 ```
