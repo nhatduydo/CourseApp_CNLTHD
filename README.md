@@ -26,8 +26,8 @@ Công nghệ lập trình hiện đại
 15. [gắn tag làm many to many](#gắn-tag-làm-many-to-many)
 16. [tác động database để tạo model](#tác-động-database-để-tạo-model)
 17. [import trong admin](#import-trong-admin)
-
-
+18. [chỉnh sửa admin hiển thị ảnh đã upload](#chỉnh-sửa-admin-hiển-thị-ảnh-đã-upload)
+   - [tạo lớp ghi đè](#tạo-lớp-ghi-đè)
 ## xuất ra requirements
 ```
 pip freeze > requirements.txt
@@ -289,9 +289,14 @@ class Course(BaseModel):
 ```
 ## gắn tag làm many to many
 - tạo class model Tag
+- nếu không overwrite to string => tag sẽ hiện thị: tag object(1)
+- khi overwrite lên => ghi đè tên lên => hiển thị tên do user/admin đặt
 ```
 class Tag(BaseModel):
       name = models.CharField(max_length=50, unique=True)
+
+      def __str__(self):
+               return self.name
 ```
 gắn thêm biến tag lên class Lesson
 - 1 bài học sẽ gắn tag gì
@@ -338,6 +343,29 @@ tạo site.register cho lesson và tag
 ```
 admin.site.register(Lesson)
 admin.site.register(Tag)
+```
+## chỉnh sửa admin hiển thị ảnh đã upload 
+import vào admin.py
+Django 4.x và các phiên bản trước
+```
+from django.utils.html import mark_safe
+```
+nếu mark_safe không có => Trong Django mới hơn, mark_safe được di chuyển sang django.utils.safestring  
+Django 5.0 và sau
+```
+from django.utils.safestring import mark_safe
+```
+- ## tạo lớp ghi đè
+```
+class CourseAdmin(admin.ModelAdmin):
+      readonly_fields = ['img']
+      
+      def img(self, course):
+            if course:
+                  return mark_safe(
+                        '<img src="/static/{url}" width="120" />' \
+                              .format(url= course.image.name)
+                  )
 ```
 
 
