@@ -162,9 +162,9 @@ class Course(models.Model):
       updated_date = models.DateTimeField(auto_now=True)
 ```
 ## phân biệt auto now và auto now add
-- auto_now=True
+### auto_now=True
 + Cập nhật giá trị ngày/giờ thành thời điểm hiện tại mỗi khi đối tượng được lưu (save).
 + Dùng cho các trường cần cập nhật thời gian mỗi lần thay đổi, như updated_at.
-- auto_now_add=True
+### auto_now_add=True
 + Chỉ đặt giá trị ngày/giờ một lần khi đối tượng được tạo và không thay đổi sau đó.
 + Dùng cho các trường cần lưu thời điểm tạo, như created_at
