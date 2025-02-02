@@ -36,7 +36,7 @@ pip freeze > requirements.txt
 ```
 pip install -r requirements.txt
 ```
-## cài đặt django 
+1. ## cài đặt django 
 ```
 pip install django
 ```
