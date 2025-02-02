@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('subject', models.CharField(max_length=255)),
                 ('description', models.TextField()),
                 ('img', models.CharField(max_length=100)),
-                ('Category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.category')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='courses.category')),
             ],
             options={
                 'abstract': False,

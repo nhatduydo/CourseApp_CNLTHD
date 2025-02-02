@@ -32,6 +32,7 @@ class Course(BaseModel):
       def __str__(self):
             return self.subject
       
+      
       class Meta:
             unique_together = ('subject', 'category')
       
@@ -50,3 +51,8 @@ class Lesson(BaseModel):
 
 class Tag(BaseModel):
       name = models.CharField(max_length=50, unique=True)
+      
+      # nếu không overwrite to string => tag sẽ hiện thị: tag object(1)
+      # khi overwrite lên => ghi đè tên lên => hiển thị tên do user/admin đặt
+      def __str__(self):
+            return self.name
