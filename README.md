@@ -21,6 +21,12 @@ Công nghệ lập trình hiện đại
 10. [tạo kế thừa những cái dùng chung thành những class riêng](#tạo-kế-thừa-những-cái-dùng-chung-thành-những-class-riêng)
 11. [tạo-migrations](#tạo-migrations)
 12. [quản-trị-trong-admin](#quản-trị-trong-admin)
+13. [tạo model class lesson](#tạo-model-class-lesson)
+14. [ràng buộc meta](#ràng-buộc-meta)
+15. [gắn tag làm many to many](#gắn-tag-làm-many-to-many)
+16. [tác động database để tạo model](#tác-động-database-để-tạo-model)
+
+
 
 ## xuất ra requirements
 ```
@@ -166,6 +172,11 @@ sau khi ghi đè, gắn phần ghi đè vừa tạo vào trang, để yêu cầu
 admin.site.register(Category, CategoryAdmin)
 ```
 ## tạo class Course trong models
+trong folder courses => tạo folder: static => tạo folder: course
+trong setting.py paste biến MEDIA_ROOT (vị trí nào cũng được)
+```
+MEDIA_ROOT = '%s/courses/static' % BASE_DIR
+```
 ```
 class Course(models.Model):
       subject = models.CharField(max_length=255, null = False)
@@ -173,8 +184,8 @@ class Course(models.Model):
       created_date = models.DateField(auto_now_add=True)
       updated_date = models.DateTimeField(auto_now=True)
       active = models.BooleanField(default=True)
-      img = models.CharField(max_length=100)
-      Category = models.ForeignKey(Category, on_delete=models.CASCADE)
+      image = models.ImageField(upload_to='courses/%Y/%m')
+      category = models.ForeignKey(Category, on_delete=models.RESTRICT)
       
       def __str__(self):
             return self.subject
@@ -240,4 +251,75 @@ python manage.py makemigrations courses
 ## quản trị trong admin
 ```
 from .models import Course
+```
+## tạo model class lesson
+trong folder courses => static => tạo folder: lessons
+```
+class Lesson(BaseModel):
+      subject = models.CharField(max_length=255, null = False)
+      content = models.TextField()
+      image = models.ImageField(upload_to='lessons/%Y/%m')
+      course = models.ForeignKey(Course, on_delete=models.CASCADE)
+```
+## ràng buộc meta
+thực hiện ràng buộc trong model class Course
+trong class course có class Meta <class con>
+```
+class Meta:
+         unique_together = ('subject', 'category')
+```
+trong class Lesson có class Meta
+```
+class meta:
+         unique_together = ('subject', 'course')
+```
+- mẫu khi kết hợp 2 class
+```
+class Course(BaseModel):
+      subject = models.CharField(max_length=255, null = False)
+      description = models.TextField()
+      image = models.ImageField(upload_to='courses/%Y/%m')
+      category = models.ForeignKey(Category, on_delete=models.RESTRICT)
+      
+      def __str__(self):
+            return self.subject
+      
+      class Meta:
+            unique_together = ('subject', 'category')
+```
+## gắn tag làm many to many
+- tạo class model Tag
+```
+class Tag(BaseModel):
+      name = models.CharField(max_length=50, unique=True)
+```
+gắn thêm biến tag lên class Lesson
+- 1 bài học sẽ gắn tag gì
+- vì class Tag ở dưới class Lesson nên khi gọi Tag ta phải bỏ vào dấu '' => 'Tag' [chương trình chưa chạy tới ở dưới nên chưa biết biến ở đâu => phải thêm nháy]
+- nếu class Tag ở phía trên Lesson thì khi gọi không cần phải bỏ vào dấu nháy 
+```
+tags = models.ManyToManyField('Tag')
+```
+class Lesson trở thành 
+```
+class Lesson(BaseModel):
+      subject = models.CharField(max_length=255, null = False)
+      content = models.TextField()
+      image = models.ImageField(upload_to='lessons/%Y/%m')
+      course = models.ForeignKey(Course, on_delete=models.CASCADE)
+      tags = models.ManyToManyField('Tag')
+      
+      
+      class meta:
+            unique_together = ('subject', 'course')
+```
+tương tự thêm tag với class Course
+```
+tags = models.ManyToManyField('Tag')
+```
+
+## tác động database để tạo model
+đầu tiền cài thư viện 
+```
+pip install pillow
 ```
