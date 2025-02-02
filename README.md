@@ -9,6 +9,8 @@ Công nghệ lập trình hiện đại
    - [tạo model truy vấn thử](#tạo-model-truy-vấn-thử)
    - [thực hiện để xem mysql](#thực-hiện-để-xem-mysql)
    - [kiểm tra 1 vài lệnh để kiểm tra model](#kiểm-tra-1-vài-lệnh)
+   - [kiểm tra trên django](#kiểm-tra-trên-django)
+
 
 
 ## cài đặt django 
@@ -117,3 +119,7 @@ Category.objects.create("khoa hoc mau tinh")
 Category.objects.create("khoa hoc du lieu")
 ```
 ctrl + z để thoát ra 
+## kiểm tra trên django
+```
+python manage.py runserver
+```
