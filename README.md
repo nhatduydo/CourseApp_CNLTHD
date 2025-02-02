@@ -10,6 +10,9 @@ Công nghệ lập trình hiện đại
    - [thực hiện để xem mysql](#thực-hiện-để-xem-mysql)
    - [kiểm tra 1 vài lệnh để kiểm tra model](#kiểm-tra-1-vài-lệnh)
    - [kiểm tra trên django](#kiểm-tra-trên-django)
+6. [tạo supper user](#tạo-supper-user)
+7. [import trong admin](#import-trong-admin)
+8. [custom theo ý người dùng](#custom-theo-ý-người-dùng)
 
 
 
@@ -122,4 +125,29 @@ ctrl + z để thoát ra
 ## kiểm tra trên django
 ```
 python manage.py runserver
+```
+## tạo supper user
+```
+python manage.py createsuperuser
+```
+sau khi tạo thành công, đăng nhập tài khoản vừa tạo vào web http://127.0.0.1:8000/admin để kiểm tra
+lúc này sẽ thấy file admin.py trong: courses > migrations > admin.py
+## import trong admin
+```
+from .models import Category
+```
+```
+admin.site.register(Category)
+```
+## custom theo ý người dùng 
+# trong admin thực hiện ghi đè mặc định
+```
+class CategoryAdmin(admin.ModelAdmin):
+      list_display = ['pk', 'name']
+      search_fields = ['name']
+      list_filter = ['id', 'name']
+```
+sau khi ghi đè, gắn phần ghi đè vừa tạo vào trang, để yêu cầu thực hiện theo dev chứ không phải hệ thống, bằng cách gắn thêm biến CategoryAdmin vào
+```
+admin.site.register(Category, CategoryAdmin)
 ```
