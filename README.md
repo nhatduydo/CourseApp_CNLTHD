@@ -15,8 +15,10 @@ Công nghệ lập trình hiện đại
 8. [custom theo ý người dùng](#custom-theo-ý-người-dùng)
 9. [tạo class Course trong models](#tạo-class-Course-trong-models)
  - [phân biệt auto now và auto now add](#phân-biệt-auto-now-và-auto-now-add)
-
-
+ - [sử dụng on delete trong khóa ngoại](#sử-dụng-on-delete-trong-khóa-ngoại)
+10. [tạo kế thừa những cái dùng chung thành những class riêng](#tạo-kế-thừa-những-cái-dùng-chung-thành-những-class-riêng)
+11. [tạo-migrations](#tạo-migrations)
+12. [quản-trị-trong-admin](#quản-trị-trong-admin)
 
 ## cài đặt django 
 ```
@@ -160,6 +162,12 @@ class Course(models.Model):
       description = models.TextField()
       created_date = models.DateField(auto_now_add=True)
       updated_date = models.DateTimeField(auto_now=True)
+      active = models.BooleanField(default=True)
+      img = models.CharField(max_length=100)
+      Category = models.ForeignKey(Category, on_delete=models.CASCADE)
+      
+      def __str__(self):
+            return self.subject
 ```
 ## phân biệt auto now và auto now add
 ### auto_now=True
@@ -168,3 +176,58 @@ class Course(models.Model):
 ### auto_now_add=True
 + Chỉ đặt giá trị ngày/giờ một lần khi đối tượng được tạo và không thay đổi sau đó.
 + Dùng cho các trường cần lưu thời điểm tạo, như created_at
+## sử dung on delete trong khóa ngoại
+### on_delete quy định hành vi khi một bản ghi liên quan bị xóa trong quan hệ ForeignKey. 
+- CASCADE: Xóa bản ghi liên quan khi bản ghi gốc bị xóa.
+  ví dụ cụ thể: khi danh mục của khóa học bị xóa thì khóa học cũng bị xóa theo
+- SET_NULL: Đặt khóa ngoại thành NULL (cần null=True).
+  ví dụ: khi trường danh mục category bị xóa, thì trường này (Course) bằng null
+- RESTRICT: Chỉ chặn xóa nếu có ràng buộc khác ảnh hưởng.
+- SET_DEFAULT: Đặt khóa ngoại thành giá trị mặc định (cần default=value).
+- SET(): Gán khóa ngoại bằng một giá trị hoặc hàm tùy chỉnh.
+- PROTECT: Ngăn không cho xóa bản ghi gốc (gây lỗi nếu cố xóa).
+- DO_NOTHING: Không thực hiện hành động nào, có thể gây lỗi tham chiếu nếu không xử lý thủ công.
+
+## tạo kế thừa những cái dùng chung thành những class riêng
+- thực hiện tạo class mới và xóa những cái dùng chung trong class course
+- đây là lớp sử dụng cho các lớp khác, không cần tạo ra => trừu tượng
+- dùng lớp lồng trong lớp class Meta => abstract = True
+```
+class BaseModel(models.Model):
+      created_date = models.DateField(auto_now_add=True)
+      updated_date = models.DateTimeField(auto_now=True)
+      active = models.BooleanField(default=True)
+      
+      class Meta:
+            abstract = True
+```
+- dùng class course kế thừa lại BaseModel
+```
+class Course(BaseModel):
+      subject = models.CharField(max_length=255, null = False)
+      description = models.TextField()
+      img = models.CharField(max_length=100)
+      Category = models.ForeignKey(Category, on_delete=models.CASCADE)
+      
+      def __str__(self):
+            return self.subject
+```
+dùng class category kế thừa lại BaseModel 
+```
+class Category(BaseModel):
+      name = models.CharField(max_length = 50, null = False)
+      
+      def __str__(self):
+            return self.name
+```
+## tạo migrations
+```
+python manage.py makemigrations courses
+```
+```
+ python manage.py migrate courses
+```
+## quản trị trong admin
+```
+from .models import Course
+```
