@@ -7,6 +7,9 @@ Công nghệ lập trình hiện đại
 4. [kết nối CSDL](#kết-nối-CSDL)
 5. [import trong setting.py](#import-trong-setting.py)
    - [tạo model truy vấn thử](#tạo-model-truy-vấn-thử)
+   - [thực hiện để xem mysql](#thực-hiện-để-xem-mysql)
+   - [kiểm tra 1 vài lệnh để kiểm tra model](#kiểm-tra-1-vài-lệnh)
+
 
 ## cài đặt django 
 ```
@@ -88,3 +91,29 @@ Migrations for 'courses':
     + Create model Category
     + Create model User
 ```
+## thực hiện để xem mysql
+```
+python manage.py sqlmigrate courses 0001
+```
+với 0001 là tên file.py trong folder migrations => file: 0001_initial.py được tạo từ lệnh python manage.py makemigrations courses
+```
+python manage.py migrate
+```
+vào trong mysql refresh ta sẽ thấy các table được tạo ra
+## kiểm tra 1 vài lệnh
+```
+python manage.py shell
+```
+```
+from courses.models import *
+```
+```
+Category.objects.create(name = "Cong nghe phan mem")
+```
+```
+Category.objects.create("khoa hoc mau tinh")
+```
+```
+Category.objects.create("khoa hoc du lieu")
+```
+ctrl + z để thoát ra 
