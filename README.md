@@ -34,6 +34,7 @@ Công nghệ lập trình hiện đại
 21. [xử lý upload hình](#xử-lý-upload-hình)
 22. [InlineModelAdmin chỉnh sửa nhiều model many to many](#inlinemodeladmin-chỉnh-sửa-nhiều-model-many-to-many)
 23. [django debug toolbar](#django-debug-toolbar)
+    - [cấu hình trong setting để debug_toolbar chạy local](#cấu-hình-trong-setting-để-debug_toolbar-chạy-local)
 
 
 
@@ -489,4 +490,26 @@ inlines = ['TagInlineAdmin']
    + Hiển thị SQL queries, thời gian thực thi
    + Kiểm tra cache, signals, template rendering
    +  Xem thông tin request, response, session
-
+cài đặt
+```
+pip install django-debug-toolbar
+```
+trong settings.py thêm vào biến INSTALLED_APPS
+```
+'debug_toolbar',
+```
+trong settings.py thêm vào biến MIDDLEWARE
+```
+'debug_toolbar.middleware.DebugToolbarMiddleware',
+```
+trong urls.py thêm vào biến urlpatterns
+```
+path("__debug__", include("debug_toolbar.urls")),
+```
+### cấu hình trong setting để debug_toolbar chạy local
+```
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+```
+chạy server lại để kiểm tra 
