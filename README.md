@@ -32,6 +32,7 @@ Công nghệ lập trình hiện đại
 19. [tích hợp CKEditor vào admin](#tích-hợp-ckeditor-vào-admin)
 20. [chỉnh sửa content của model Lesson](#chỉnh-sửa-content-của-model-lesson)
 21. [xử lý upload hình](#xử-lý-upload-hình)
+22. [InlineModelAdmin chỉnh sửa nhiều model](#inlinemodeladmin-chỉnh-sửa-nhiều-model)
 
 
 
@@ -467,10 +468,9 @@ trong class CourseAdmin thêm biến:
 form = CourseForm
 ```
 thực hiện runserver lại để kiểm tra 
-
-
-
-
+khi upload hình phải thêm đăng trước /static/<url hình> thì hình mới hiển thị được
+## InlineModelAdmin chỉnh sửa nhiều model 
+chỉnh sửa nhiều model có quan hệ với nhau trong cùng một trang của model cha
 
 
 
