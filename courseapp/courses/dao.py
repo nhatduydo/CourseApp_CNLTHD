@@ -1,0 +1,17 @@
+from models import Category
+from models import Course
+from django.db.models import Count
+
+
+def load_coueses(params={}):
+      q = Course.objects.filter(active = True)
+      
+      kw = params.get('kw')
+      if kw:
+            q = q.filter(subject__icontains=kw)
+            
+      cate_id = params.get('cate_id')
+      if cate_id:
+            q = q.filter(category_id=cate_id)
+      
+      return q
