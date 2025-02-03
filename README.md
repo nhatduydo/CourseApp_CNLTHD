@@ -32,7 +32,8 @@ Công nghệ lập trình hiện đại
 19. [tích hợp CKEditor vào admin](#tích-hợp-ckeditor-vào-admin)
 20. [chỉnh sửa content của model Lesson](#chỉnh-sửa-content-của-model-lesson)
 21. [xử lý upload hình](#xử-lý-upload-hình)
-22. [InlineModelAdmin chỉnh sửa nhiều model](#inlinemodeladmin-chỉnh-sửa-nhiều-model)
+22. [InlineModelAdmin chỉnh sửa nhiều model many to many](#inlinemodeladmin-chỉnh-sửa-nhiều-model-many-to-many)
+23. [django debug toolbar](#django-debug-toolbar)
 
 
 
@@ -378,6 +379,7 @@ from django.utils.safestring import mark_safe
 - ## tạo lớp ghi đè hiển thị img
 ```
 class CourseAdmin(admin.ModelAdmin):
+      list_display = ['pk', 'subject', 'created_date', 'updated_date', 'category', 'active']
       readonly_fields = ['img']
       
       def img(self, course):
@@ -469,9 +471,22 @@ form = CourseForm
 ```
 thực hiện runserver lại để kiểm tra 
 khi upload hình phải thêm đăng trước /static/<url hình> thì hình mới hiển thị được
-## InlineModelAdmin chỉnh sửa nhiều model 
-chỉnh sửa nhiều model có quan hệ với nhau trong cùng một trang của model cha
-
-
-
+## InlineModelAdmin chỉnh sửa nhiều model many to many
+chỉnh sửa nhiều model có quan hệ với nhau trong cùng một trang của model cha  
+tạo class trong admin.py
+```
+class TagInlineAdmin(admin.StackedInline):
+      model = Tag
+```
+trong class CourseAdmin thêm biến:
+```
+inlines = ['TagInlineAdmin']
+```
+## django debug toolbar
+- là một package giúp hiển thị thông tin chi tiết về các request, database queries, settings, và hiệu suất của ứng dụng Django ngay trên trình duyệt
+- hữu ích cho việc debug và tối ưu hóa code trong quá trình phát triển.
+-  Tính năng chính:
+   + Hiển thị SQL queries, thời gian thực thi
+   + Kiểm tra cache, signals, template rendering
+   +  Xem thông tin request, response, session
 
