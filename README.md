@@ -35,6 +35,8 @@ Công nghệ lập trình hiện đại
 22. [InlineModelAdmin chỉnh sửa nhiều model many to many](#inlinemodeladmin-chỉnh-sửa-nhiều-model-many-to-many)
 23. [django debug toolbar](#django-debug-toolbar)
     - [cấu hình trong setting để debug_toolbar chạy local](#cấu-hình-trong-setting-để-debug_toolbar-chạy-local)
+24. [tạo dao và viết hàm truy vấn](#tạo-dao-và-viết-hàm-truy-vấn)
+    - [truy vấn gom nhóm dữ liệu hoặc truy vấn thống kê](#truy-vấn-gom-nhóm-dữ-liệu-hoặc-truy-vấn-thống-kê)
 
 
 
@@ -513,3 +515,31 @@ INTERNAL_IPS = [
 ]
 ```
 chạy server lại để kiểm tra 
+## tạo dao và viết hàm truy vấn
+import thư viện vào dao.py
+```
+from models import Category
+from models import Course
+```
+```
+def load_coueses(params={}):
+      q = Course.objects.filter(active = True)
+      
+      kw = params.get('kw')
+      if kw:
+            q = q.filter(subject__icontains=kw)
+            
+      cate_id = params.get('cate_id')
+      if cate_id:
+            q = q.filter(category_id=cate_id)
+      
+      return q
+```
+## truy vấn gom nhóm dữ liệu hoặc truy vấn thống kê
+- sử dụng annotate()
+     + dùng để thêm các giá trị tính toán (aggregate) vào mỗi đối tượng trong queryset.
+     + Nó giúp bạn thực hiện các phép tính như đếm, tổng, trung bình... trên dữ liệu liên quan.
+import thư viện
+```
+from django.db.models import Count
+```
