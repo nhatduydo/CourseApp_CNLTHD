@@ -27,7 +27,9 @@ Công nghệ lập trình hiện đại
 16. [tác động database để tạo model](#tác-động-database-để-tạo-model)
 17. [import trong admin](#import-trong-admin)
 18. [chỉnh sửa admin hiển thị ảnh đã upload](#chỉnh-sửa-admin-hiển-thị-ảnh-đã-upload)
-      - [tạo lớp ghi đè](#tạo-lớp-ghi-đè)
+      - [tạo lớp ghi đè hiển thị img](#tạo-lớp-ghi-đè-hiển-thị-img)
+      - [thêm css và js vào trang ModelAdmin](#thêm-css-và-js-vào-trang-modeladmin)
+19. [tích hợp CKEditor vào admin](#tích-hợp-ckeditor-vào-admin)
 ## xuất ra requirements
 ```
 pip freeze > requirements.txt
@@ -355,7 +357,7 @@ Django 5.0 và sau
 ```
 from django.utils.safestring import mark_safe
 ```
-- ## tạo lớp ghi đè
+- ## tạo lớp ghi đè hiển thị img
 ```
 class CourseAdmin(admin.ModelAdmin):
       readonly_fields = ['img']
@@ -367,12 +369,43 @@ class CourseAdmin(admin.ModelAdmin):
                               .format(url= course.image.name)
                   )
 ```
-
-
-
-
-
-
+## thêm css và js và trang ModelAdmin
+- tạo thư mục css: static/css/style.css
+- trong class Course: thêm class Media
+- nguyên tắc: / từ static / vô 
+```
+class Media:
+            css = {
+                  'all': ('/static/css/style.css', )
+            }
+            js = ('/static/js/script.js',)
+```
+## tích hợp CKEditor vào admin
+- hỗ trợ chỉnh sửa văn bản giống như Microsoft Word với các tính năng như in đậm, in nghiêng, chèn ảnh, bảng,...
+cài thư viện 
+```
+pip install django-ckeditor
+```
+trong setting, vô biến: INSTALL _APP:
+```
+'ckeditor',
+'ckeditor_uploader'
+```
+thêm biến cấu hình chỉ định nơi upload: đặt ở bất kì trong settting
+```
+CKEDITOR_UPLOAD_PATH = "ckeditor/images/"
+```
+cập nhập urls của project
+trong urls.py 
+import thư viện 
+```
+from django.urls import re_path
+from django.urls import include
+```
+trong biến urlpatterns thêm phần tử: 
+```
+re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+```
 
 
 
