@@ -4,7 +4,8 @@ from .models import Course
 from .models import Lesson
 from .models import Tag
 from django.utils.safestring import mark_safe
-
+from django import forms
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class CategoryAdmin(admin.ModelAdmin):
       list_display = ['pk', 'name']
@@ -12,8 +13,17 @@ class CategoryAdmin(admin.ModelAdmin):
       list_filter = ['id', 'name']
 
 
+class CourseForm(forms.ModelForm):
+      description = forms.CharField(widget=CKEditorUploadingWidget)
+      
+      class Meta:
+            model = Course
+            fields = '__all__'
+
+
 class CourseAdmin(admin.ModelAdmin):
       readonly_fields = ['img']
+      form = CourseForm
       
       def img(self, course):
             if course:
@@ -21,6 +31,12 @@ class CourseAdmin(admin.ModelAdmin):
                         '<img src="/static/{url}" width="120" />' \
                               .format(url= course.image.name)
                   )
+                  
+      class Media:
+            css = {
+                  'all': ('/static/css/style.css', )
+            }
+            js = ('/static/js/script.js',)
 
 
 # Register your models here.
