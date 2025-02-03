@@ -21,8 +21,15 @@ class CourseForm(forms.ModelForm):
             fields = '__all__'
 
 
+class TagInlineAdmin(admin.StackedInline):
+      model = Course.tags.through
+      
+
+
 class CourseAdmin(admin.ModelAdmin):
+      list_display = ['pk', 'subject', 'created_date', 'updated_date', 'category', 'active']
       readonly_fields = ['img']
+      inlines = [TagInlineAdmin]
       form = CourseForm
       
       def img(self, course):

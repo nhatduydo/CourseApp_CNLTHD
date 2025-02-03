@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses.apps.CoursesConfig',
     'ckeditor',
-    'ckeditor_uploader'
+    'ckeditor_uploader',
+    'debug_toolbar'
 ]
 
 CKEDITOR_UPLOAD_PATH = "ckeditor/images/"
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 import pymysql
@@ -90,6 +92,10 @@ DATABASES = {
         'HOST': '' # mặc định localhost
     }
 }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 MEDIA_ROOT = '%s/courses/static' % BASE_DIR
 
