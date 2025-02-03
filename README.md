@@ -30,6 +30,11 @@ Công nghệ lập trình hiện đại
       - [tạo lớp ghi đè hiển thị img](#tạo-lớp-ghi-đè-hiển-thị-img)
       - [thêm css và js vào trang ModelAdmin](#thêm-css-và-js-vào-trang-modeladmin)
 19. [tích hợp CKEditor vào admin](#tích-hợp-ckeditor-vào-admin)
+20. [chỉnh sửa content của model Lesson](#chỉnh-sửa-content-của-model-lesson)
+21. [xử lý upload hình](#xử-lý-upload-hình)
+
+
+
 ## xuất ra requirements
 ```
 pip freeze > requirements.txt
@@ -37,6 +42,18 @@ pip freeze > requirements.txt
 ## tải các gói thư viện trong requirements
 ```
 pip install -r requirements.txt
+```
+## mikegrations
+```
+python manage.py makemigrations courses
+```
+## migrate
+```
+python manage.py migrate
+```
+chạy server django
+```
+python manage.py runserver
 ```
 1. ## cài đặt django 
 ```
@@ -406,16 +423,50 @@ trong biến urlpatterns thêm phần tử:
 ```
 re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ```
-
-
-
-
-
-
-
-
-
-
+## chỉnh sửa content của model Lesson
+trong models import thư viện 
+```
+from ckeditor.fields import RichTextField
+```
+thay đổi content trong Lesson
+```
+content = RichTextField()
+```
+thay đổi description trong Course
+```
+description = RichTextField()
+```
+sau đó thực hiện make mikegrations và migrate
+```
+python manage.py makemigrations courses
+```
+```
+python manage.py migrate
+```
+sau đó thực hiện chạy server lại 
+```
+python manage.py runserver
+```
+## xử lý upload hình
+trong admin.py thực hiện import 
+```
+from django import forms
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+```
+tạo class mới: xử lý cho Course nên đặt tên: CourseForm
+```
+class CourseForm(forms.ModelForm):
+      description = forms.CharField(widget=CKEditorUploadingWidget)
+      
+      class Meta:
+            model = Course
+            fields = '__all__'
+```
+trong class CourseAdmin thêm biến:
+```
+form = CourseForm
+```
+thực hiện runserver lại để kiểm tra 
 
 
 
