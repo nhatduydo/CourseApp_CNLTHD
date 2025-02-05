@@ -37,6 +37,7 @@ Công nghệ lập trình hiện đại
     - [cấu hình trong setting để debug_toolbar chạy local](#cấu-hình-trong-setting-để-debug_toolbar-chạy-local)
 24. [tạo dao và viết hàm truy vấn](#tạo-dao-và-viết-hàm-truy-vấn)
     - [truy vấn gom nhóm dữ liệu hoặc truy vấn thống kê](#truy-vấn-gom-nhóm-dữ-liệu-hoặc-truy-vấn-thống-kê)
+    - [order_by](#order_by)
 
 
 
@@ -543,3 +544,17 @@ import thư viện
 ```
 from django.db.models import Count
 ```
+- ### order_by
+     + Mặc định (ASC - Ascending - Tăng dần):  sẽ sắp xếp dữ liệu theo thứ tự tăng dần (nhỏ → lớn, A → Z).
+     + Giảm dần (DESC - Descending - Giảm dần): ẽ sắp xếp theo thứ tự giảm dần (lớn → nhỏ, Z → A).
+       ví dụ:
+       ```
+       users = User.objects.order_by('age')  # Sắp xếp theo tuổi tăng dần
+       users_desc = User.objects.order_by('-age')  # Sắp xếp theo tuổi giảm dần
+       ```
+- câu lệnh truy vấn đơn giản
+```
+def count_courses_by_cate():
+      return Category.objects.annotate(count = Count('course__id')).values("id", "name", "count").order_by("-count")
+```
+  
