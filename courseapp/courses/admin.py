@@ -7,6 +7,14 @@ from django.utils.safestring import mark_safe
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
+
+class CourseAppAdminSite(admin.AdminSite):
+      site_header = 'isSuccess' # đặt tên gì cũng được
+      
+      
+admin_site = CourseAppAdminSite(name='myapp')
+
+
 class CategoryAdmin(admin.ModelAdmin):
       list_display = ['pk', 'name']
       search_fields = ['name']

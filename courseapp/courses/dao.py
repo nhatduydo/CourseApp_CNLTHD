@@ -15,3 +15,6 @@ def load_coueses(params={}):
             q = q.filter(category_id=cate_id)
       
       return q
+
+def count_courses_by_cate():
+      return Category.objects.annotate(count = Count('course__id')).values("id", "name", "count").order_by("-count")
