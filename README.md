@@ -38,7 +38,7 @@ Công nghệ lập trình hiện đại
 24. [tạo dao và viết hàm truy vấn](#tạo-dao-và-viết-hàm-truy-vấn)
     - [truy vấn gom nhóm dữ liệu hoặc truy vấn thống kê](#truy-vấn-gom-nhóm-dữ-liệu-hoặc-truy-vấn-thống-kê)
     - [order_by](#order_by)
-
+25. [adminsite - tùy chỉnh trang web](#adminsite---tùy-chỉnh-trang-web)
 
 
 ## xuất ra requirements
@@ -557,4 +557,4 @@ from django.db.models import Count
 def count_courses_by_cate():
       return Category.objects.annotate(count = Count('course__id')).values("id", "name", "count").order_by("-count")
 ```
-  
+## adminsite - tùy chỉnh trang web  
