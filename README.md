@@ -558,3 +558,23 @@ def count_courses_by_cate():
       return Category.objects.annotate(count = Count('course__id')).values("id", "name", "count").order_by("-count")
 ```
 ## adminsite - tùy chỉnh trang web  
+   - Định nghĩa trang admin riêng thay vì mặc định (django.contrib.admin.site).
+   - Tùy chỉnh giao diện & chức năng của Django Admin.
+   - Quản lý nhiều trang admin với cấu hình khác nhau.
+trong trang admin.py thực hiện:
+không cần import vẫn thực hiện được <chỉ ghi vào import cho chắc>
+```
+from django.contrib.admin import AdminSite
+```
+- tạo một class adminsite
+- nguyên tắc: tất cả các trang đều kế thừa trang adminsite
+```
+class CourseAppAdminSite(admin.AdminSite):
+      site_header = 'isSuccess' # đặt tên gì cũng được
+      
+      
+admin_site = CourseAppAdminSite(name='myapp')
+```
+như vậy, đăng ký app từ đây sẽ thay biến của nó thành biến của mình 
+<biến của mình là admin_site>: từ đầu đã tên như vậy, giờ đặt lại thành tên mới trùng tên cũ để khỏi thay đổi
+chuyển qua trang urls.py để defind (định nghĩa) lại, lấy url của trang mới của mình
