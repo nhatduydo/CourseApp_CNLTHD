@@ -4,6 +4,7 @@ Công nghệ lập trình hiện đại
 [tải các gói thư viện trong requirements](#tải-các-gói-thư-viện-trong-requirements)  
 [xuất ra requirements](#xuất-ra-requirements)  
 [Quy tắc Import trong Python](#quy-tắc-import-trong-python)  
+[tự động sắp xếp import theo thứ tự chuẩn PEP8](#tự-động-sắp-xếp-import-theo-thứ-tự-chuẩn-pep8)  
 
 1. [cài đặt django](#cài-đặt-django)
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
@@ -78,7 +79,8 @@ pip install -r requirements.txt
   - Dùng Absolute Import cho project lớn để tránh lỗi khi thay đổi thư mục.
   - Dùng Relative Import khi làm việc trong cùng một app nhỏ để code gọn hơn.
  
-  
+## tự động sắp xếp import theo thứ tự chuẩn PEP8
+- cài extension isort trong vscode để tự sắp xếp các import theo thứ tự chuẩn của PEP8
 ## mikegrations
 ```
 python manage.py makemigrations courses
@@ -744,20 +746,53 @@ pip install djangorestframework
 ```
 pip freeze > requirements.txt
 ```
-tạo file: courseapp > serializers.py
+tạo file: courses > serializers.py
 import category và course
 ```
 from courses.models import Category
 from courses.models import Course
+from rest_framework import serializers
 ```
-
-
-
-
-
-
-
-
+```
+class CategorySeializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        field = "__all__"
+```
+qua view.py tạo serializer
+```
+from rest_framework import viewsets
+from rest_framework import generics
+from courses.models import Category
+from courses import serializers
+```
+```
+class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = serializers.CategorySeializer
+```
+tạo file: courses > urls.py
+ra urls.py ở ngoài trang chủ courseapp/urls.py link urls.py mới tạo vô 
+```
+path("", include("courses.urls")),
+```
+thực hiện code trong courses/urls.py
+```
+from django.urls import path
+from django.urls import include
+from rest_framework import routers
+```
+```
+router = routers.DefaultRouter()
+router.register("categories", views.CategoryViewSet, basename="categories")
+urlpatterns = [
+    path("", include(router.urls)),
+]
+```
+trong setting.py thêm vào biến INSTALLED_APPS
+```
+"rest_framework",
+```
 
 
 
