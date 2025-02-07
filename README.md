@@ -47,6 +47,10 @@ Công nghệ lập trình hiện đại
     - [vẽ biểu đồ charjs](#vẽ-biểu-đồ-charjs)
     - [khắc phục lỗi khi thêm {% %} trong vscode](#khắc-phục-lỗi-khi-thêm-{%-%}-trong-vscode)
 26. [Xây dựng API theo yêu cầu](#xây-dựng-api-theo-yêu-cầu)
+27. [tích hợp swagger](#tích-hợp-swagger)
+    - [khái niệm swagger](#khái-niệm-swagger)
+    - [api categories](#api-categories)
+    - [api course khóa học](#api-course-khóa-học)
 
 
 ## xuất ra requirements
@@ -793,12 +797,60 @@ trong setting.py thêm vào biến INSTALLED_APPS
 ```
 "rest_framework",
 ```
-
-
-
-
-
-
-
-
+## khái niệm swagger
+- Swagger là một công cụ giúp tạo tài liệu API tự động cho ứng dụng Django REST framework (DRF)
+- Nó hiển thị danh sách API, phương thức (GET, POST, PUT, DELETE), request/response mẫu và cho phép test API trực tiếp trên giao diện web.
+## tích hợp swagger 
+- cài đặt thư viện 
+```
+pip install drf-yasg
+```
+trong setting.py thêm vào biến INSTALLED_APPS
+```
+'drf_yasg',
+```
+trong courseapp/urls.py 
+```
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+```
+```
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Course API",
+        default_version="v1",
+        description="APIs for CourseApp",
+        contact=openapi.Contact(email="thanh.dh@ou.edu.vn"),
+        license=openapi.License(name="Dương Hữu Thành@2021"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+```
+thêm vào mảng urlpatterns
+## api categories
+```
+re_path(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    re_path(
+        r"^swagger/$",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    re_path(
+        r"^redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"
+    ),
+```
+chạy runserver để kiểm tra
+```
+python manage.py runserver
+```
+```
+http://127.0.0.1:8000/swagger/
+```
+## api course khóa học
 
