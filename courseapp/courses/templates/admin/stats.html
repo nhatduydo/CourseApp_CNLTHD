@@ -12,10 +12,13 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-      let data = [];
-      let value = [];
+      let labels = [];
+      let values = [];
 
-      
+      {% for c in stats %}
+      labels.push('{{ c.name }}');  // vì c.name là chuỗi, nếu để không sẽ bị lầm tưởng là biến của javascript, phải thêm ''
+      values.push({{ c.count }});
+      {% endfor %}
 
       window.onload = () => {
             const ctx = document.getElementById('myChart');
@@ -23,11 +26,16 @@
       new Chart(ctx, {
       type: 'bar',
       data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: labels,
             datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
+            label: '# Số lượng',
+            data: values,
+            borderWidth: 1,
+            backgroundColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(54, 162, 235)',
+                  'rgb(255, 205, 86)'
+    ],
             }]
       },
       options: {
@@ -40,4 +48,5 @@
       });
       }
 </script>
+
 {% endblock %}
