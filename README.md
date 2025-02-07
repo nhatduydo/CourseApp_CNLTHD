@@ -3,6 +3,8 @@ Công nghệ lập trình hiện đại
 # Mục lục
 [tải các gói thư viện trong requirements](#tải-các-gói-thư-viện-trong-requirements)  
 [xuất ra requirements](#xuất-ra-requirements)
+[Quy tắc Import trong Python](#quy-tắc-import-trong-python)
+
 1. [cài đặt django](#cài-đặt-django)
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
 3. [tạo app](#tạo-app)
@@ -43,6 +45,7 @@ Công nghệ lập trình hiện đại
     - [đổ dữ liệu ra](#đổ-dữ-liệu-ra)
     - [vẽ biểu đồ charjs](#vẽ-biểu-đồ-charjs)
     - [khắc phục lỗi khi thêm {% %} trong vscode](#khắc-phục-lỗi-khi-thêm-{%-%}-trong-vscode)
+26. [Xây dựng API theo yêu cầu](#xây-dựng-api-theo-yêu-cầu)
 
 
 ## xuất ra requirements
@@ -53,6 +56,29 @@ pip freeze > requirements.txt
 ```
 pip install -r requirements.txt
 ```
+# Quy tắc Import trong Python
+- Import tuyệt đối (Absolute Import) – Dùng khi import từ module bên ngoài thư mục hiện tại.  
+  Rõ ràng, dùng tốt cho project lớn.
+  ```
+  from courses.models import Category
+  from django.template.response import TemplateResponse
+  from courses import dao
+  ```
+- Import tương đối (Relative Import) – Dùng khi import trong cùng thư mục.  
+  Ngắn gọn, nhưng dễ lỗi khi thay đổi thư mục.
+  ```
+  from .models import Category
+  ```
+- Import cả module – Dùng khi muốn import toàn bộ file/module.
+  Khi dùng phải gọi đầy đủ courses.dao.function_name().
+  ```
+  import courses.dao
+  ```
+  ##  Kinh nghiệm thực tế:
+  - Dùng Absolute Import cho project lớn để tránh lỗi khi thay đổi thư mục.
+  - Dùng Relative Import khi làm việc trong cùng một app nhỏ để code gọn hơn.
+ 
+  
 ## mikegrations
 ```
 python manage.py makemigrations courses
@@ -662,7 +688,9 @@ import cdn charjs vào, tạm thời để ở stats.html
 ```
 bỏ vùng canvas vào: là vùng đồ họa, để đổ biểu đồ vào
 ```
-<canvas id="myChart"></canvas>
+<div>
+      <canvas id="myChart"></canvas>
+</div>
 ```
 bỏ đoạn script vào window.onload để có thể chạy được
 ```
@@ -708,3 +736,34 @@ bỏ đoạn script vào window.onload để có thể chạy được
 ```
 "javascript.validate.enable": false
 ```
+# Xây dựng API theo yêu cầu
+import gói thư viện 
+```
+pip install djangorestframework
+```
+```
+pip freeze > requirements.txt
+```
+tạo file: courseapp > serializers.py
+import category và course
+```
+from courses.models import Category
+from courses.models import Course
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
