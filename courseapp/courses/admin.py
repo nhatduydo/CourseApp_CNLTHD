@@ -6,11 +6,24 @@ from .models import Tag
 from django.utils.safestring import mark_safe
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django.urls import path
+from django.template.response import TemplateResponse
+from courses import dao
 
 
 class CourseAppAdminSite(admin.AdminSite):
       site_header = 'isSuccess' # đặt tên gì cũng được
       
+      def get_urls(self):
+            return [
+                        path('course-stats/', self.stats_view)
+                  ] + super().get_urls()
+      
+      def stats_view(self, request):
+            return TemplateResponse(request, 'admin/stats.html',{
+                        'stats': dao.count_courses_by_cate()
+                        
+                  }) # đường dẫn theo vị trí tạo thư mục
       
 admin_site = CourseAppAdminSite(name='myapp')
 
@@ -55,7 +68,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Course, CourseAdmin)
-admin.site.register(Lesson)
-admin.site.register(Tag)
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Course, CourseAdmin)
+admin_site.register(Lesson)
+admin_site.register(Tag)

@@ -1,5 +1,5 @@
-from models import Category
-from models import Course
+from .models import Category
+from .models import Course
 from django.db.models import Count
 
 

@@ -19,8 +19,10 @@ from django.urls import path
 from django.urls import re_path
 from django.urls import include
 from . import views
+from courses.admin import admin_site
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('admin/', admin_site.urls),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path("__debug__", include("debug_toolbar.urls")),
     path('', views.home, name='home'),
