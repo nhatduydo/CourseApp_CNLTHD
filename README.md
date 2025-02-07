@@ -39,6 +39,8 @@ Công nghệ lập trình hiện đại
     - [truy vấn gom nhóm dữ liệu hoặc truy vấn thống kê](#truy-vấn-gom-nhóm-dữ-liệu-hoặc-truy-vấn-thống-kê)
     - [order_by](#order_by)
 25. [adminsite - tùy chỉnh trang web](#adminsite---tùy-chỉnh-trang-web)
+    - [thêm view mới vào admin site](#thêm-view-mới-vào-admin-site)
+    - [đổ dữ liệu ra](#đổ-dữ-liệu-ra)
 
 
 ## xuất ra requirements
@@ -519,8 +521,8 @@ chạy server lại để kiểm tra
 ## tạo dao và viết hàm truy vấn
 import thư viện vào dao.py
 ```
-from models import Category
-from models import Course
+from .models import Category
+from .models import Course
 ```
 ```
 def load_coueses(params={}):
@@ -576,5 +578,61 @@ class CourseAppAdminSite(admin.AdminSite):
 admin_site = CourseAppAdminSite(name='myapp')
 ```
 như vậy, đăng ký app từ đây sẽ thay biến của nó thành biến của mình 
-<biến của mình là admin_site>: từ đầu đã tên như vậy, giờ đặt lại thành tên mới trùng tên cũ để khỏi thay đổi
+<biến của mình là admin_site>: (biến cũ là admin.site <đừng nhầm lẫn>)
+```
+# Register your models here.
+admin_site.register(Category, CategoryAdmin)
+admin_site.register(Course, CourseAdmin)
+admin_site.register(Lesson)
+admin_site.register(Tag)
+```
 chuyển qua trang urls.py để defind (định nghĩa) lại, lấy url của trang mới của mình
+```
+from courses.admin import admin_site
+```
+sửa lại thành đường path của mình 
+```
+path('admin/', admin_site.urls),
+```
+chạy lại server để kiểm tra
+```
+python manage.py runserver
+```
+thấy có isSuccess ==> đã chạy đúng
+## thêm view mới vào admin site
+import thư viện trong admin.py
+```
+from django.urls import path
+```
+trong admin.py thêm hàm vào class CourseAppAdminSite mới tạo mở trên
+```
+def get_urls(self):
+            return [
+                        path('course-stats/', self.stats_view)
+                  ] + super().get_urls()
+```
+vậy ta đã có trang mới, mới endpoint là course-stats/
+tạo folder và file mới: courses > templetes > admin > stats.html
+trong stats.html
+```
+{% extends 'admin/base_site.html' %}
+{% block content %}
+<h1>Thống kê khóa học trực tuyến</h1>
+{% endblock %}
+```
+import thư viện trong admin.py
+```
+from django.template.response import TemplateResponse
+```
+tiếp đó, viết hàm stats_view để nó gọi (vẫn viết trong class CourseAppAdminSite của admin.py), trong hàm này sẽ trả về một view mới 
+```
+def stats_view(self, request):
+            return TemplateResponse(request, 'admin/stats.html') # đường dẫn theo vị trí tạo thư mục
+```
+thực hiện chạy runserver để kiểm tra: http://127.0.0.1:8000/admin/course-stats/
+- sau khi thấy trang mới không lỗi: thực hiện hoàn thiện tiếp code trên
+
+## đổ dữ liệu ra
+```
+from courses import dao
+```
