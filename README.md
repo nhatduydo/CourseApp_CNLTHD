@@ -1,5 +1,5 @@
 # CourseApp_CNLTHD
-Công nghệ lập trình hiện đại
+# Công nghệ lập trình hiện đại
 # Mục lục
 [tải các gói thư viện trong requirements](#tải-các-gói-thư-viện-trong-requirements)  
 [xuất ra requirements](#xuất-ra-requirements)  
