@@ -41,6 +41,7 @@ Công nghệ lập trình hiện đại
 25. [adminsite - tùy chỉnh trang web](#adminsite---tùy-chỉnh-trang-web)
     - [thêm view mới vào admin site](#thêm-view-mới-vào-admin-site)
     - [đổ dữ liệu ra](#đổ-dữ-liệu-ra)
+    - [vẽ biểu đồ charjs](#vẽ-biểu-đồ-charjs)
 
 
 ## xuất ra requirements
@@ -632,7 +633,60 @@ def stats_view(self, request):
 thực hiện chạy runserver để kiểm tra: http://127.0.0.1:8000/admin/course-stats/
 - sau khi thấy trang mới không lỗi: thực hiện hoàn thiện tiếp code trên
 
-## đổ dữ liệu ra
+## đổ dữ liệu ra 
+trong admin.py ghi hàm trong class CourseAppAdminSite cùng cấp với def stats_view
 ```
 from courses import dao
+```
+```
+def stats_view(self, request):
+            return TemplateResponse(request, 'admin/stats.html',{
+                        'stats': dao.count_courses_by_cate()
+                        
+                  }) # đường dẫn theo vị trí tạo thư mục
+```
+qua trang stats.html gọi biến stats vừa tạo 
+```
+<ul>
+      {% for c in stats %}
+            <li><strong>{{ c.name }}</strong>: {{ c.count }}</li>
+      {% endfor %}
+</ul>
+```
+chạy runserer để kiểm tra biến vừa tạo đã gọi được dữ liệu ra chưa
+## vẽ biểu đồ charjs
+import cdn charjs vào, tạm thời để ở stats.html
+```
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+```
+bỏ vùng canvas vào: là vùng đồ họa, để đổ biểu đồ vào
+```
+<canvas id="myChart"></canvas>
+```
+bỏ đoạn script vào window.onload để có thể chạy được
+```
+<script>
+      window.onload = () => {
+            const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+      }
+</script>
 ```
