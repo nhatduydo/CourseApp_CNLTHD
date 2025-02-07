@@ -42,6 +42,7 @@ Công nghệ lập trình hiện đại
     - [thêm view mới vào admin site](#thêm-view-mới-vào-admin-site)
     - [đổ dữ liệu ra](#đổ-dữ-liệu-ra)
     - [vẽ biểu đồ charjs](#vẽ-biểu-đồ-charjs)
+    - [khắc phục lỗi khi thêm {% %} trong vscode](#khắc-phục-lỗi-khi-thêm-{%-%}-trong-vscode)
 
 
 ## xuất ra requirements
@@ -666,27 +667,44 @@ bỏ vùng canvas vào: là vùng đồ họa, để đổ biểu đồ vào
 bỏ đoạn script vào window.onload để có thể chạy được
 ```
 <script>
+      let labels = [];
+      let values = [];
+
+      {% for c in stats %}
+      labels.push('{{ c.name }}');  // vì c.name là chuỗi, nếu để không sẽ bị lầm tưởng là biến của javascript, phải thêm ''
+      values.push({{ c.count }});
+      {% endfor %}
+
       window.onload = () => {
             const ctx = document.getElementById('myChart');
 
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
+      new Chart(ctx, {
+      type: 'bar',
+      data: {
+            labels: labels,
+            datasets: [{
+            label: '# Số lượng',
+            data: values,
+            borderWidth: 1
+            }]
+      },
+      options: {
+            scales: {
+            y: {
+            beginAtZero: true
+            }
+            }
       }
-    }
-  });
+      });
       }
 </script>
+```
+## [khắc phục lỗi khi thêm {% %} trong vscode](#khắc-phục-lỗi-khi-thêm-{%-%}-trong-vscode)
+- cài extensions:
+     + django <mấy duy đang cài>
+     + janja
+- cách 2 (chưa thấy hiệu quả)
+     + ctrl + shift + p => Preferences: Open user Settings (JSON) => thêm dòng lệnh vào
+```
+"javascript.validate.enable": false
 ```
