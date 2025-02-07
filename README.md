@@ -2,8 +2,8 @@
 Công nghệ lập trình hiện đại
 # Mục lục
 [tải các gói thư viện trong requirements](#tải-các-gói-thư-viện-trong-requirements)  
-[xuất ra requirements](#xuất-ra-requirements)
-[Quy tắc Import trong Python](#quy-tắc-import-trong-python)
+[xuất ra requirements](#xuất-ra-requirements)  
+[Quy tắc Import trong Python](#quy-tắc-import-trong-python)  
 
 1. [cài đặt django](#cài-đặt-django)
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
