@@ -51,6 +51,10 @@
     - [khái niệm swagger](#khái-niệm-swagger)
     - [api categories](#api-categories)
     - [api course khóa học](#api-course-khóa-học)
+28. [phân trang](#phân-trang)
+    - [custom lại đường dẫn hình ảnh](#custom-lại-đường-dẫn-hình-ảnh)
+    - [hiển thị thông tin tên của tag](#hiển-thị-thông-tin-tên-của-tag)
+
 
 
 ## xuất ra requirements
@@ -853,4 +857,97 @@ python manage.py runserver
 http://127.0.0.1:8000/swagger/
 ```
 ## api course khóa học
+1. tạo class serializer trong serializers.py
+```
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = "__all__"
+```
+2. tạo queryset trong class Viewset trong views.py
+```
+from courses.models import Course
+```
+```
+class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
+    queryset = Course.objects.filter(active=True).all()
+    serializer_class = serializers.CourseSerializer
+```
+3. vào courses/urls.py đăng ký cho nó 1 cái API
+```
+router.register("courses", views.CourseViewSet, basename="courses")
+```
+4. vào runserver và kiểm tra
+```
+python manage.py runserver
+```
+```
+http://127.0.0.1:8000/swagger
+```
+## phân trang 
+- một dạng mì ăn liền, lên docs để đọc thông tin, không cần nhớ
+```
+https://www.django-rest-framework.org/topics/documenting-your-api/
+```
+- slide có hướng dẫn phân trang toàn cục
+- giờ thực hiện phân trang cục bộ
+1. tạo một lớp paginator.py riêng: courses/pagiinators.py
+2. nguyên tắc: dùng hướng đối tượng, kế thừa
+import thư viện đọc từ docs
+```
+from rest_framework.pagination import PageNumberPagination
+```
+```
+class CoursePpaginator(PageNumberPagination):
+    page_size = 2
+```
+gọi lớp vừa tạo bên views.py để sử dụng 
+import 
+```
+from courses import paginators
+```
+trong class CourseViewSet cho thêm 1 thuộc tính
+```
+    pagination_class = paginators.CoursePpaginator
+```
+vào runserver để kiểm tra 
+```
+http://127.0.0.1:8000/swagger/
+```
+## custom lại đường dẫn hình ảnh
+```
+http://127.0.0.1:8000/courses/?page-1
+```
+khi vào đường dẫn và chọn linlk hình ảnh ta thấy lỗi => phải custom lại 
+vào serializers.py > class CourseSerializer
+```
+image = serializers.SerializerMethodField(source="image")
 
+    def get_image(self, course):
+        if course.image:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri("/static/%s" % course.image.name)
+```
+## hiển thị thông tin tên của tag
+trong serialixers.py 
+import 
+```
+from courses.models import Tag
+```
+tạo 1 class mới 
+```
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["id", "name"]
+```
+sau đó trong class CourseSerializer gọi lại trường tag vừa được tạo ở trên
+```
+tags = TagSerializer(many=True)
+```
+chạy lại server để kiểm tra
+```
+http://127.0.0.1:8000/courses/?page-2
+```
+lúc này nó sẽ hiển thị thông tin tags ra cho mình xem
