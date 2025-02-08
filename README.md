@@ -54,7 +54,10 @@
 28. [phân trang](#phân-trang)
     - [custom lại đường dẫn hình ảnh](#custom-lại-đường-dẫn-hình-ảnh)
     - [hiển thị thông tin tên của tag](#hiển-thị-thông-tin-tên-của-tag)
-
+    - [thêm phần lọc dữ liệu](#thêm-phần-lọc-dữ-liệu)
+      + [lấy danh sách tất cả khóa học](#lấy-danh-sách-tất-cả-khóa-học)
+      + [lấy danh sách các bài học của một khóa học](#lấy-danh-sách-các-bài-học-của-một-khóa-học)
+      + [thử debug](#thử-debug)
 
 
 ## xuất ra requirements
@@ -951,3 +954,122 @@ chạy lại server để kiểm tra
 http://127.0.0.1:8000/courses/?page-2
 ```
 lúc này nó sẽ hiển thị thông tin tags ra cho mình xem
+## thêm phần lọc dữ liệu 
+## lấy danh sách tất cả khóa học
+- vd: &category_id=&q=
+trong views.py thực hiện can thiệp query trước khi nó trả về all
+trong class CourseViewSet thêm hàm
+```
+def get_queryset(self):
+        queries = self.queryset
+
+        q = self.request.query_params.get("q")
+        if q:
+            queries = queries.filter(subject__icontains=q)
+        return queries
+```
+thực hiện runserver vào xem phần subject là vì và tìm kiếm xem có ra không 
+```
+http://127.0.0.1:8000/courses/?q=Introduce
+```
+tương tự thực hiện với class CategoryViewSet
+phần này tự làm, chưa biết đúng sai
+```
+def get_queryset(self):
+        queries = self.queryset
+
+        # q = self.request.GET.get("q")
+        q = self.request.query_params.get("q")
+        if q:
+            queries = queries.filter(name__icontains=q)
+        return queries
+```
+```
+http://127.0.0.1:8000/categories/?q=Category
+```
+## lấy danh sách các bài học của một khóa học
+- defind một API mới không nằm trong các chuẩn generics.ListAPIView trong CourseViewSet
+- thực hiện viết hàm trong class CourseViewSet
+- nếu đường dãn không có course_id thì không để biến pk vào, nếu có thì để
+- import thư viện trong views.py
+```
+from rest_framework.decorators import action
+```
+trong serializers.py thực hiện tạo một class lessonSerializer
+```
+from courses.models import Lesson
+```
+```
+class LessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = "__all__"
+```
+vì thấy trong lesson có có thuộc tính: image, tags giống CourseSerializer:
+cắt 2 thuộc tính này ra cho vào class mối, và thực hiện kế thừa class đó
+```
+class BaseSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField(source="image")
+    tags = TagSerializer(many=True)
+
+    def get_image(self, course):
+        if course.image:
+            request = self.context.get("request")
+            if request:
+                return request.build_absolute_uri("/static/%s" % course.image.name)
+```
+lúc này: CourseSerializer và LessonSerializer sẽ kế thừa lại BaseSerializer
+```
+class CourseSerializer(BaseSerializer):
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+```
+```
+class LessonSerializer(BaseSerializer):
+    class Meta:
+        model = Lesson
+        fields = ["id", "subject", "image", "tags"]
+
+```
+chuyển qua thực hiện viết hàm bên views.py 
+- thực hiện viết hàm trong class CourseViewSet
+```
+    # nếu detail=True => có biến tham số pk ở hàm
+    # nếu detail=False => không có biến tham số pk ở hàm
+    # pk: tham số id: đại diện cho model Course
+    @action(methods=["get"], detail=True)
+    def lessons(self, request, pk):
+        lessons = self.get_object().lesson_set.filter(active=True).all()
+
+        # # thử debug
+        # import pdb
+        # pdb.set_trace()
+
+        return Response(
+            serializers.LessonSerializer(lessons, many=True).data,
+            status=status.HTTP_200_OK,
+        )
+```
+chạy runserver và kiểm tra, trước đó, nếu chưa tạo dữ liệu cho lesson thì phải vào tạo
+- kiểm tra mysql courses_lesson nếu rỗng tức chưa tạo dữ liệu
+```
+http://127.0.0.1:8000/admin/courses/lesson/
+```
+```
+http://127.0.0.1:8000/courses/1/lessons/
+```
+nếu gặp lỗi thử debug ở dưới
+# thử debug
+```
+ # thử debug
+        import pdb
+        pdb.set_trace()
+```
+```
+lesssons
+```
+```
+pk
+```
