@@ -46,4 +46,15 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "username",
             "password",
+            "email",
         ]  # cái này trong model của django đã có sẵn những trường này rồi
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        data = validated_data.copy()
+
+        user = User(**data)
+        user.set_password(data["password"])
+        user.save()
+
+        return user
