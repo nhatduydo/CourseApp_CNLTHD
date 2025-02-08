@@ -58,6 +58,9 @@
       + [lấy danh sách tất cả khóa học](#lấy-danh-sách-tất-cả-khóa-học)
       + [lấy danh sách các bài học của một khóa học](#lấy-danh-sách-các-bài-học-của-một-khóa-học)
       + [thử debug](#thử-debug)
+29. [API chi tiết bài học](#api-chi-tiết-bài-học)
+30. [đăng ký user](#đăng-ký-user)
+31. [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
 
 
 ## xuất ra requirements
@@ -1080,3 +1083,43 @@ giả sử ở trên đúng, nhập tiếp pk xem có hiển thị khóa không
 ```
 pk
 ```
+## API chi tiết bài học 
+trong views.py thực hiện tạo một class mới
+```
+from courses.models import Lesson
+```
+```
+class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+    queryset = Lesson.objects.filter(active=True).all()
+    serializer_class = serializers.LessonSerializer
+```
+vậy là xong api cơ bản  
+qua resources/urls.py đăng ký một router mới 
+```
+router.register("lessons", views.LessonViewSet, basename="lessons")
+```
+thực hiện runserver swagger thì sẽ thấy một api mới được tạo ra
+```
+http://127.0.0.1:8000/swagger/
+```
+thực hiện try it out và điền id kiểm tra thử 
+## đăng ký user
+- defind ra một class user trong serializers.py
+- phải định nghĩa được đăng ký cần dùng những trường gì
+import user vào
+```
+from courses.models import User
+```
+```
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "password",
+        ]  # cái này trong model của django đã có sẵn những trường này rồi
+```
+## lấy danh sách comment - api con của lessons
+- tạm để đó
