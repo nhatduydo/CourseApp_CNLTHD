@@ -43,9 +43,21 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "rest_framework",
     "drf_yasg",
+    "cloudinary",
 ]
 
 CKEDITOR_UPLOAD_PATH = "ckeditor/images/"
+
+
+import cloudinary
+
+# Configuration
+cloudinary.config(
+    cloud_name="devtqlbho",
+    api_key="654785974366212",
+    api_secret="yBPftN_K0QlSh0mAUyCZ-ewTxUY",
+    secure=True,
+)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

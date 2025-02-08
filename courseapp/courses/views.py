@@ -1,7 +1,7 @@
 from courses import paginators, serializers
 from courses.models import Category, Course, Lesson, User
 from django.shortcuts import render
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, parsers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -61,3 +61,6 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 class UserViewset(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True).all()
     serializer_class = serializers.UserSerializer
+    parser_classes = [
+        parsers.MultiPartParser
+    ]  # nhờ thằng này, nó sẽ tiến hành upload được tập tin của mình, upload hẳn lên cloudinary chứ không còn server
