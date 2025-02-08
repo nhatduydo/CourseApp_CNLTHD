@@ -61,8 +61,9 @@
 29. [API chi tiết bài học](#api-chi-tiết-bài-học)
 30. [đăng ký user](#đăng-ký-user)
     - [chạy postman kiểm tra](#chạy-postman-kiểm-tra)
-31. [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
-32. 
+31. [upload hình ảnh lên couldinary](#upload-hình-ảnh-lên-couldinary)
+32. [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
+ 
 
 ## xuất ra requirements
 ```
@@ -1225,5 +1226,83 @@ class UserSerializer(serializers.ModelSerializer):
 ```
 thực hiện đổi user và kiểm tra postman lại 
 lúc này, kết quả nhận được không hiển thị phần password nữa 
+## upload hình ảnh lên couldinary
+cài gói thư viện 
+```
+pip install cloudinary
+```
+```
+pip freeze > requirements.txt
+```
+trong setting.py vào biến INSTALLED_APPS thêm:
+```
+ "cloudinary",
+```
+trong models.py import thư viện 
+```
+from cloudinary.models import CloudinaryField
+```
+```
+class User(AbstractUser):
+    avatar = CloudinaryField("avatar", null = True)
+```
+qua serializers.py thêm trường avatar vào UserSerializer
+```
+fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "password",
+            "email",
+            "avatar",
+        ]
+```
+copy phần code trên docs của cloudinary vào settting.py (đặt ở đâu cũng được)
+```
+https://console.cloudinary.com/pm/c-036c8753dcf1d538b7c7cdec713f4b/getting-started
+```
+```
+import cloudinary
+
+# Configuration
+cloudinary.config(
+    cloud_name="devtqlbho",
+    api_key="654785974366212",
+    api_secret="yBPftN_K0QlSh0mAUyCZ-ewTxUY",
+    secure=True,
+)
+```
+qua views.py: để upload cần có một parsers
+import parsers
+```
+from rest_framework import parsers
+```
+trong class UserViewset bật parsers class lên
+```
+ parser_classes = [
+        parsers.MultiPartParser
+    ]  # nhờ thằng này, nó sẽ tiến hành upload được tập tin của mình, upload hẳn lên cloudinary chứ không còn server
+```
+thực hiện makemigration lại 
+```
+python manage.py makemigrations
+```
+```
+python manage.py migrate
+```
+chạy server lên và thực hiện kiểm tra bằng postman
+```
+python manage.py runserver
+```
+thực hiện kiểm tra thử bằng postman
+- để test upload thì không dùng json được vì nó không gửi file lên được
+- dùng form-data để test: body => form-data
+```
+key: frist_name; last_name; username; password; avatar <chọn loại file>
+value: nhat; duy; upload1; 1; chọn hình
+```
+nhấn nút send để kiểm tra
+- nếu xuất hiện trường avatar và hiện 201 là đúng: đã trên server của cloudinary
+- vào media library để kiểm tra
 ## lấy danh sách comment - api con của lessons
 - tạm để đó
