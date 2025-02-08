@@ -1048,9 +1048,12 @@ chuyển qua thực hiện viết hàm bên views.py
         # pdb.set_trace()
 
         return Response(
-            serializers.LessonSerializer(lessons, many=True).data,
+            serializers.LessonSerializer(
+                lessons, many=True, context={"request": request}
+            ).data,
             status=status.HTTP_200_OK,
         )
+
 ```
 chạy runserver và kiểm tra, trước đó, nếu chưa tạo dữ liệu cho lesson thì phải vào tạo
 - kiểm tra mysql courses_lesson nếu rỗng tức chưa tạo dữ liệu
