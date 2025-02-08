@@ -1070,9 +1070,13 @@ nếu gặp lỗi thử debug ở dưới
         import pdb
         pdb.set_trace()
 ```
+vào trang lỗi, tải lại, sau đó bên terminal sẽ hiển thị pdb
+nhập vào để xem có kết quả không\
+- lesssons là biến code ở trên tạo
 ```
 lesssons
 ```
+giả sử ở trên đúng, nhập tiếp pk xem có hiển thị khóa không
 ```
 pk
 ```
