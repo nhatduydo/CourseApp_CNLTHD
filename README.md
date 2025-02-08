@@ -60,8 +60,9 @@
       + [thử debug](#thử-debug)
 29. [API chi tiết bài học](#api-chi-tiết-bài-học)
 30. [đăng ký user](#đăng-ký-user)
+    - [chạy postman kiểm tra](#chạy-postman-kiểm-tra)
 31. [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
-
+32. 
 
 ## xuất ra requirements
 ```
@@ -1119,7 +1120,110 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "username",
             "password",
+            "email",
         ]  # cái này trong model của django đã có sẵn những trường này rồi
 ```
+sau đó, dùng những trường này cho nó tạo đối tượng 
+trong views.py thực hiện tạo một class view mới
+```
+from courses.models import User
+```
+```
+# để post và chèn vô => CreateAPIView
+class UserViewset(viewsets.ViewSet, generics.CreateAPIView):
+    queryset = User.objects.filter(is_active=True).all()
+    serializer_class = serializers.UserSerializer
+```
+tạo router đăng ký trong resourses/urls.py
+```
+router.register("users", views.UserViewset, basename="users")
+```
+lúc này, nó đã hình thành một bộ API và chỉ có duy nhất một API
+thực hiện runserver để kiểm tra
+```
+python manage.py runserver
+```
+```
+http://127.0.0.1:8000/swagger/
+```
+lúc này thấy user có phương thức post là đúng
+## chạy postman kiểm tra 
+yêu cầu: phải sài được postman
+- chọn phương thức post
+- thêm đường dẫn vào
+```
+http://127.0.0.1:8000/users/
+```
+body => raw => json 
+trong bảng ghi nội dung để kiểm tra
+```
+{
+    "first_name": "nhat",
+    "last_name": "duy",
+    "username":"nhatduy242",
+    "password": 1,
+    "email": "nhatduy242@gmail.com"
+}
+```
+nhấn nút send => nếu xuất hiện màu xanh 201 created => tạo thành công 
+- tuy nhiên có vấn đề: password đang được lưu hiển thị => không bảo mật => can thiệp hàm để băm mật khẩu
+- ghi đè lại phương thức create trong class UserSerializer bằng cách tạo hàm trong class UserSerializer
+```
+def create(self, validated_data):
+        data = validated_data.copy()
+
+        user = User(**data)
+        user.set_password(data["password"])
+        user.save()
+
+        return user
+```
+thực hiện đổi username mới và kiểm tra postman lại 
+```
+{
+    "first_name": "nhat",
+    "last_name": "duy",
+    "username":"nhatduy2705",
+    "password": 1,
+    "email": "nhatduy242@gmail.com"
+}
+```
+lúc này nếu ra 200 và kết quả cho password đã băm là chính xác
+ví dụ kết quả password trả về:
+```
+  "password": "pbkdf2_sha256$870000$SiwU5arVZ7QaWLkysU79kz$MU3yMmYJO/QaWOS667kCi1Qabh34qNoj4hnrKg6+h2U=",
+```
+tuy nhiên: khi đọc user không ai trả về password như vậy, không ai đọc api mà trả mã băm về
+- không hiểu
+- nhiều vấn đề
+thực hiện thêm biến vào class UserSerializer
+```
+extra_kwargs = {"password": {"write_only": True}}
+```
+vậy class UserSerializer sẽ trở thành:
+```
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "password",
+            "email",
+        ]  # cái này trong model của django đã có sẵn những trường này rồi
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        data = validated_data.copy()
+
+        user = User(**data)
+        user.set_password(data["password"])
+        user.save()
+
+        return user
+```
+thực hiện đổi user và kiểm tra postman lại 
+lúc này, kết quả nhận được không hiển thị phần password nữa 
 ## lấy danh sách comment - api con của lessons
 - tạm để đó
