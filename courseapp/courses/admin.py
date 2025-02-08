@@ -1,14 +1,12 @@
-from django.contrib import admin
-from .models import Category
-from .models import Course
-from .models import Lesson
-from .models import Tag
-from django.utils.safestring import mark_safe
-from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-from django.urls import path
-from django.template.response import TemplateResponse
 from courses import dao
+from django import forms
+from django.contrib import admin
+from django.template.response import TemplateResponse
+from django.urls import path
+from django.utils.safestring import mark_safe
+
+from .models import Category, Course, Lesson, Tag
 
 
 class CourseAppAdminSite(admin.AdminSite):

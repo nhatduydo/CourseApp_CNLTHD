@@ -1,7 +1,5 @@
-from courses.models import Category
-from courses.models import Course
+from courses.models import Category, Course, Lesson, Tag
 from rest_framework import serializers
-from courses.models import Tag
 
 
 class CategorySeializer(serializers.ModelSerializer):
@@ -16,7 +14,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ["id", "name"]
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField(source="image")
     tags = TagSerializer(many=True)
 
@@ -26,6 +24,15 @@ class CourseSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri("/static/%s" % course.image.name)
 
+
+class CourseSerializer(BaseSerializer):
+
     class Meta:
         model = Course
         fields = "__all__"
+
+
+class LessonSerializer(BaseSerializer):
+    class Meta:
+        model = Lesson
+        fields = ["id", "subject", "image", "tags"]
