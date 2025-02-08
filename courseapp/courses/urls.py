@@ -6,6 +6,7 @@ router = routers.DefaultRouter()
 
 router.register("categories", views.CategoryViewSet, basename="categories")
 router.register("courses", views.CourseViewSet, basename="courses")
+router.register("lessons", views.LessonViewSet, basename="lessons")
 
 
 urlpatterns = [

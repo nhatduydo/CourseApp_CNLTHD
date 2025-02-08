@@ -1,5 +1,5 @@
 from courses import paginators, serializers
-from courses.models import Category, Course
+from courses.models import Category, Course, Lesson
 from django.shortcuts import render
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
@@ -50,3 +50,8 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
             ).data,
             status=status.HTTP_200_OK,
         )
+
+
+class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+    queryset = Lesson.objects.filter(active=True).all()
+    serializer_class = serializers.LessonSerializer

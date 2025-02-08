@@ -1,4 +1,4 @@
-from courses.models import Category, Course, Lesson, Tag
+from courses.models import Category, Course, Lesson, Tag, User
 from rest_framework import serializers
 
 
@@ -36,3 +36,14 @@ class LessonSerializer(BaseSerializer):
     class Meta:
         model = Lesson
         fields = ["id", "subject", "image", "tags"]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "password",
+        ]  # cái này trong model của django đã có sẵn những trường này rồi
