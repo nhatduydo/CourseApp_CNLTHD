@@ -1,7 +1,7 @@
 from courses import paginators, serializers
 from courses.models import Category, Course, Lesson, User
 from django.shortcuts import render
-from rest_framework import generics, parsers, status, viewsets
+from rest_framework import generics, parsers, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -64,3 +64,14 @@ class UserViewset(viewsets.ViewSet, generics.CreateAPIView):
     parser_classes = [
         parsers.MultiPartParser
     ]  # nhờ thằng này, nó sẽ tiến hành upload được tập tin của mình, upload hẳn lên cloudinary chứ không còn server
+
+    def get_permissions(self):
+        if self.action.__eq__("current_user"):
+            return [permissions.IsAuthenticated()]
+
+        return [permissions.AllowAny()]
+
+    # nó gọi API này khi nó đã được chứng thực rồi
+    @action(methods=["GET"], url_name="current-user", detail=False)
+    def current_user(self, request):
+        return Response(serializers.UserSerializer(request.user).data)
