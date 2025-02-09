@@ -66,6 +66,7 @@
     - [Django OAuth Toolkits](#django-oauth-toolkits)
     - [bắt đầu chứng thực bằng postman](#bắt-đầu-chứng-thực-bằng-postman)
     - [defind định nghĩa một API /users/current-user/](#defind-định-nghĩa-một-api-users-current-user)
+    - [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
 
 
 
@@ -1379,3 +1380,67 @@ grant_type: password
 thực hiện nhấn send => kết quả sẽ có access_token
 - với access_token này, thực hiện API để chứng thực
 ## defind định nghĩa một API /users/current-user/
+và user đó phải được chứng thức
+- trong views.py: viết hàm vào class UserViewset
+```
+from rest_framework import permissions
+```
+```
+def get_permissions(self):
+        if self.action.__eq__("current-user"):
+            return [permissions.IsAuthenticated()]
+
+        return [permissions.AllowAny()]
+```
+tất cả các thông tin sau khi chứng thực sẽ được nằm trong đối tượng: request.user   
+```
+    # nó gọi API này khi nó đã được chứng thực rồi
+    @action(methods=["GET"], url_name="current-user", detail=False)
+    def current_user(self, request):
+        return Response(serializers.UserSerializer(request.user).data)
+```
+thực hiện runserver và kiểm tra bằng postman 
+```
+http://127.0.0.1:8000/swagger/
+```
+kiểm tra xem đã có /users/current_user/ chưa
+sau đó thực hiện kiểm tra postman, tại post mới, phương thức get
+```
+http://127.0.0.1:8000/users/current_user/
+```
+nó hiển thị:  "detail": "Authentication credentials were not provided." => không có quyền
+bắt đầu chứng thực bằng cách đưa: access_token vô 
+- vào headers > nhập key: ```Authorization```
+- bỏ token vô: ```bearer P7LrMVheL7PY70vWccN6JY1d8Q04iE```
+- khi send => nó trả về kêt quả và 200 là đúng
+## lấy danh sách comment - api con của lessons
+- tương tự như trên, thực hiện api cho tương tác: comment và like
+
+tổ chức model: tạo một model mới: Interaction, kế thừa BaseModel, thêm 2 thông tin riêng
+- user nào thực hiện Interaction này
+- comment trên bài học nào, like trên bào học nào
+  => đây là thông tin chung của tất cả các tương tác
+  không nên gộp phần comment và đánh giá vô cùng một table => gây lãng phí tài nguyên trong thiết kế dữ liệu
+
+sử dụng trừu tượng cho class model mới tạo
+```
+class Interaction(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        Abstract = True
+```
+```
+class Comment(Interaction):
+    content = models.CharField(max_length=255, null=False)
+```
+thực hiện makemigrations
+```
+python manage.py makemigrations
+```
+```
+python manage.py migrate
+```
+kiểm tra trong mysql server sẽ thấy courses_comment, trong bài tập lớn phần vấn đáp: xuất cho thầy phần lược đồ cơ sở quan hệ, tuy nhiên chỉ xuất những cái nào của mình. còn cái nào của nó đừng xuất 
+bởi vì nếu xuất là xuất rất nhiều
