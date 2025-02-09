@@ -1,10 +1,10 @@
 from courses import paginators, serializers
 from courses.models import Category, Comment, Course, Lesson, User
 from django.shortcuts import render
-from rest_framework import generics, parsers, permissions, status, viewsets
+from rest_framework import generics, parsers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+import perms
 
 class CategoryViewSet(viewsets.ViewSet, generics.ListAPIView):
     queryset = Category.objects.all()
@@ -55,12 +55,12 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(active=True).all()
     serializer_class = serializers.LessonSerializer
-    permission_classes = [permissions.AllowAny]  # ai cũng được
+    permission_classes = [perms.AllowAny]  # ai cũng được
     # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
 
     def get_permissions(self):
         if self.action in ["add_comment"]:
-            return [permissions.IsAuthenticated()]
+            return [perms.IsAuthenticated()]
         return self.permission_classes
 
     @action(methods=["POST"], url_path="comments", detail=True)
@@ -88,11 +88,16 @@ class UserViewset(viewsets.ViewSet, generics.CreateAPIView):
 
     def get_permissions(self):
         if self.action.__eq__("current_user"):
-            return [permissions.IsAuthenticated()]
+            return [perms.IsAuthenticated()]
 
-        return [permissions.AllowAny()]
+        return [perms.AllowAny()]
 
     # nó gọi API này khi nó đã được chứng thực rồi
     @action(methods=["GET"], url_name="current-user", detail=False)
     def current_user(self, request):
         return Response(serializers.UserSerializer(request.user).data)
+
+
+class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = serializers.CommentSerializer
