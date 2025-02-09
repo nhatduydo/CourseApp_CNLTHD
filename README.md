@@ -72,6 +72,8 @@
     - [chứng thực để có thể comment](#chứng-thực-để-có-thể-comment)
     - [quy tắc làm api create: phải trả về dữ liệu sau khi tạo](#quy-tắc-làm-api-create-phải-trả-về-dữ-liệu-sau-khi-tạo)
     - [API xóa comment](#api-xóa-comment)
+    - [API cập nhật comment](#api-cập-nhật-comment)
+    - [API like](#api-like)
 
 
 ## xuất ra requirements
@@ -1650,9 +1652,99 @@ class OwnerAuthenticated(permissions.IsAuthenticated):
 ```
 qua views.py import perms (permissions) vừa tạo 
 ```
-import perms
+from courses import perms
 ```
-trong CommentViewSet thêm:
+trong views.py > CommentViewSet thêm:
 ```
 permission_classes = [perms.OwnerAuthenticated]
 ```
+trong perms.py
+```
+class OwnerAuthenticated(permissions.IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        return self.has_permission(request, view) and request.user == obj.user
+```
+tạo một superuser khác, cho comment và thực hiện xóa thử
+```
+python manage.py createsuperuser
+```
+lấy token user2: 
+```
+http://127.0.0.1:8000/o/token/
+```
+```
+{
+    "client_id": "uLZYLmAw9sFvEWOlPnyLlEGMiHXOrRLnag4IsmTK",
+    "client_secret": "7HUEH6pfe3vHkhPSVaPRradXkOIWNgxHijggGqiJyXLmckBC1hXu2YNrbd3DZoQhARJveQ8NjGZzENoxbnLIqVvQaNCgjCJcnELwhAaQgNZjgRqr1jfrYWxzYBmVMJCZ",
+    "username":"test",
+    "password": "1",
+    "grant_type": "password"
+}
+```
+```
+    "access_token": "fZA004NpNYkgac9LN9atwyzDJKUU2m",
+```
+
+đăng nhập user2 mới tạo: test, thử dùng user2 xóa comment của user1 ( thực hiện chứng thực luôn)
+kết quả postman thu được (delete)
+```
+http://127.0.0.1:8000/comments/1/
+```
+```
+{
+    "detail": "You do not have permission to perform this action."
+}
+```
+thử lấy token của user1: admin (người comment và xóa) (post)
+```
+http://127.0.0.1:8000/o/token/
+```
+```
+    "access_token": "Wh2Q4tEMm9FS40ism4jPIdx3f4y5NV",
+```
+truyền vào postman (delete)
+```
+http://127.0.0.1:8000/comments/1/
+```
+- kết quả hiển thị 204, bảng không có dữ liệu gì là xóa thành công
+- quay trở về database courses_comment sẽ thấy không còn comment này nữa
+## API cập nhập comment
+trong views.py class CommentViewSet thực hiện thêm một kế thừa
+```
+generics.UpdateAPIView
+```
+class trở thành: 
+```
+class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView, generics.UpdateAPIView):
+```
+trong ``` http://127.0.0.1:8000/swagger/ ``` sẽ xuất hiện 2 cái: PUT và PATCH 
+- chọn PATH để update từng phần đối tượng, nếu chọn PUT nó sẽ update toàn bộ đối tượng, cái gì không gửi lên nó reset hết
+chạy postman thử để kiểm tra (PATCH) raw > JSON 
+```
+http://127.0.0.1:8000/comments/2/
+```
+```
+{
+    "content": "excellent"
+}
+```
+kết quả hiển thị 200 là oke
+```
+{
+    "id": 2,
+    "content": "excellent",
+    "user": {
+        "first_name": "",
+        "last_name": "",
+        "username": "admin",
+        "email": "admin@gmail.com",
+        "avatar": null
+    }
+}
+```
+vô mysql để kiểm tra lại, nó update đúng một phần
+## API like 
+tùy úng dụng: 
+- facebook: một bài like 1 lần
+- zalo: một bài like nhiều lần (thả n trái tim vô được)
+- code này theo facebook => like 1 lần
