@@ -65,6 +65,9 @@
 32. [OAuth2](#oauth2)
     - [Django OAuth Toolkits](#django-oauth-toolkits)
     - [bắt đầu chứng thực bằng postman](#bắt-đầu-chứng-thực-bằng-postman)
+    - [defind định nghĩa một API /users/current-user/](#defind-định-nghĩa-một-api-users-current-user)
+
+
 
 ## xuất ra requirements
 ```
@@ -1366,3 +1369,13 @@ Authorization grant type: "resource owner password-based"
   http://127.0.0.1:8000/o/token/
   ```
 body => form-data
+```
+username: admin
+password: 1
+client_id: uLZYLmAw9sFvEWOlPnyLlEGMiHXOrRLnag4IsmTK
+client_secret: 7HUEH6pfe3vHkhPSVaPRradXkOIWNgxHijggGqiJyXLmckBC1hXu2YNrbd3DZoQhARJveQ8NjGZzENoxbnLIqVvQaNCgjCJcnELwhAaQgNZjgRqr1jfrYWxzYBmVMJCZ
+grant_type: password
+```
+thực hiện nhấn send => kết quả sẽ có access_token
+- với access_token này, thực hiện API để chứng thực
+## defind định nghĩa một API /users/current-user/
