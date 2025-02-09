@@ -5,6 +5,7 @@
 [xuất ra requirements](#xuất-ra-requirements)  
 [Quy tắc Import trong Python](#quy-tắc-import-trong-python)  
 [tự động sắp xếp import theo thứ tự chuẩn PEP8](#tự-động-sắp-xếp-import-theo-thứ-tự-chuẩn-pep8)  
+[hướng dẫn chứng thực](#hướng-dẫn-chứng-thực)  
 
 1. [cài đặt django](#cài-đặt-django)
 2. [kết nối cơ sở dữ liệu mySQL](#kết-nối-cơ-sở-dữ-liệu-mySQL)
@@ -67,7 +68,10 @@
     - [bắt đầu chứng thực bằng postman](#bắt-đầu-chứng-thực-bằng-postman)
     - [defind định nghĩa một API /users/current-user/](#defind-định-nghĩa-một-api-users-current-user)
     - [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
-
+    - [thêm bình luận mới vào bài học](#thêm-bình-luận-mới-vào-bài-học)
+    - [chứng thực để có thể comment](#chứng-thực-để-có-thể-comment)
+    - [quy tắc làm api create: phải trả về dữ liệu sau khi tạo](#quy-tắc-làm-api-create-phải-trả-về-dữ-liệu-sau-khi-tạo)
+    - 
 
 
 ## xuất ra requirements
@@ -113,6 +117,37 @@ python manage.py migrate
 chạy server django
 ```
 python manage.py runserver
+```
+## hướng dẫn chứng thực
+1. vào postman: chọn method POST, paste url, và chọn body > form-data (khoảng line 1390) hoặc raw > json
+   ```
+   http://127.0.0.1:8000/o/token/
+   ```
+2. vào trang admin đăng nhập admin
+   ```
+   http://127.0.0.1:8000/admin/
+   ```
+   ```
+   http://127.0.0.1:8000/o/applications/
+   ```
+   tạo app và phải copy client_id và client_secret lưu vào  
+   nếu đã có thì không cần tạo lại
+3. thêm cấu hình này trong setting
+   ```
+   DAUTH2_PROVIDER = {
+    "OAUTH2_BACKEND_CLASS": "bauth2_provider.oauth2_backends.JSONOAuthLibCore"
+   }
+   ```
+4. quay lại postman ghi dữ liệu vào và thực hiện send
+   - phần này ghi dữ liệu json
+```
+{
+    "client_id": "uLZYLmAw9sFvEWOlPnyLlEGMiHXOrRLnag4IsmTK",
+    "client_secret": "7HUEH6pfe3vHkhPSVaPRradXkOIWNgxHijggGqiJyXLmckBC1hXu2YNrbd3DZoQhARJveQ8NjGZzENoxbnLIqVvQaNCgjCJcnELwhAaQgNZjgRqr1jfrYWxzYBmVMJCZ",
+    "username":"admin",
+    "password": "1",
+    "grant_type": "password"
+}
 ```
 1. ## cài đặt django 
 ```
@@ -1421,8 +1456,7 @@ tổ chức model: tạo một model mới: Interaction, kế thừa BaseModel, 
 - comment trên bài học nào, like trên bào học nào
   => đây là thông tin chung của tất cả các tương tác
   không nên gộp phần comment và đánh giá vô cùng một table => gây lãng phí tài nguyên trong thiết kế dữ liệu
-
-sử dụng trừu tượng cho class model mới tạo
+trong models.py sử dụng trừu tượng cho class model mới tạo
 ```
 class Interaction(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
@@ -1431,6 +1465,7 @@ class Interaction(BaseModel):
     class Meta:
         Abstract = True
 ```
+trong models.py tạo class Like 
 ```
 class Comment(Interaction):
     content = models.CharField(max_length=255, null=False)
@@ -1444,3 +1479,149 @@ python manage.py migrate
 ```
 kiểm tra trong mysql server sẽ thấy courses_comment, trong bài tập lớn phần vấn đáp: xuất cho thầy phần lược đồ cơ sở quan hệ, tuy nhiên chỉ xuất những cái nào của mình. còn cái nào của nó đừng xuất 
 bởi vì nếu xuất là xuất rất nhiều
+
+trong models.py tạo class Like (tương tự class comment):
+```
+class Like(Interaction):
+    active = models.BooleanField()  # like hoặc chưa like
+```
+trong models.py tạo class Rating (đánh giá từ 1 -> 5):
+```
+class Rating(Interaction):
+    rate = models.SmallIntegerField(default=0)  # đánh giá sao từ 1 đến 5
+```
+tạo makemigrations
+```
+python manage.py makemigrations courses
+```
+```
+ python manage.py migrate
+```
+lúc này sẽ có 2 model trong mysql: courses_like và courses_rating
+## thêm bình luận mới vào bài học
+- thêm bài mới: method = POST
+- phải chứng thực mới được thêm
+trong views.py > class LessonViewSet định nghĩa một API
+nếu để bình thường thì sẽ không có ý nghĩa gì, bắt buộc phải gắn
+```
+@action(methods=["POST"], url_path="comments", detail=True)
+```
+trong yêu cầu /lessons/{lesson_id}/comments/: có biến: {lesson_id} => detail phải là True => trong hàm phải có pk truyền vào
+```
+from courses.models import Comment
+```
+```
+    @action(methods=["POST"], url_path="comments", detail=True)
+    def add_comment(self, request, pk):
+        # user đã chứng thực rồi sẽ nằm trong request.user
+        # tất cả dữ liệu từ body data lấy từ client lấy lên đều trong: request.data
+        c = Comment.objects.create(
+            user=request.user,
+            lesson=self.get_object(),
+            content=request.data.get("content"),
+        )
+```
+## chứng thực để có thể comment
+```
+permission_classes = [permissions.AllowAny]  # ai cũng được
+```
+```
+    # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
+
+    def get_permissions(self):
+        if self.action in ["add_comment"]:
+            return [permissions.IsAuthenticated()]
+        return self.permission_classes
+```
+## quy tắc làm api create: phải trả về dữ liệu sau khi tạo
+- để trả về được: phải tạo một serializer
+vào serializers.py thực hiện tạo mới mới một serializers:
+```
+from courses.models import Comment
+```
+```
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()  # để lấy avatar của user
+
+    class Meta:  # thực hiện ghi đè
+        model = Comment
+        fields = ["id", "content", "user"]
+```
+sau khi có serializer thực hiện quay lại views.py để return hàm add_comment trong LessonViewSet
+```
+return Response(
+            serializers.CommentSerializer(c).data, status=status.HTTP_201_CREATED
+        )
+```
+vậy lúc này class LessonViewSet sẽ trở thành 
+```
+class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
+    queryset = Lesson.objects.filter(active=True).all()
+    serializer_class = serializers.LessonSerializer
+    permission_classes = [permissions.AllowAny]  # ai cũng được
+    # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
+
+    def get_permissions(self):
+        if self.action in ["add_comment"]:
+            return [permissions.IsAuthenticated()]
+        return self.permission_classes
+
+    @action(methods=["POST"], url_path="comments", detail=True)
+    def add_comment(self, request, pk):
+        # user đã chứng thực rồi sẽ nằm trong request.user
+        # tất cả dữ liệu từ body data lấy từ client lấy lên đều trong: request.data
+        c = Comment.objects.create(
+            user=request.user,
+            lesson=self.get_object(),
+            content=request.data.get("content"),
+        )
+
+        return Response(
+            serializers.CommentSerializer(c).data, status=status.HTTP_201_CREATED
+        )
+```
+thực hiện runserver 
+```
+python manage.py runserver
+```
+vào kiểm tra xem có phương thức post lesson/{id}/comment 
+```
+http://127.0.0.1:8000/swagger/
+```
+muốn chạy: 
+- thực hiện vào postman: tạo chứng thực lấy token ra 
+- sau khi đã có access_token (ví dụ dưới lấy bằng postman, không biết access_token có thay đổi không)
+```
+"access_token": "2qtIWyQ3lWRKhcpBTsWGKsNTEDJ1ir",
+```
+- tạo một postman mới, phương thức post, body: raw > JSON,  url:
+```
+http://127.0.0.1:8000/lessons/1/comments/
+```
+```
+{
+    "content": "good"
+}
+```
+khi gửi lên sẽ có kết quả 
+```
+    "detail": "Authentication credentials were not provided."
+```
+vì chưa chứng thực, thực hiện thêm chứng thực
+vào headers, bỏ token vào key:Authorization; value: Bearer + token  
+sẽ nhận được kết quả phản hồi, ví dụ:
+```
+{
+    "id": 1,
+    "content": "good",
+    "user": {
+        "first_name": "",
+        "last_name": "",
+        "username": "admin",
+        "email": "admin@gmail.com",
+        "avatar": null
+    }
+}
+```
+vô mysql courses_comment xem để tra 
+
