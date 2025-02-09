@@ -71,7 +71,7 @@
     - [thêm bình luận mới vào bài học](#thêm-bình-luận-mới-vào-bài-học)
     - [chứng thực để có thể comment](#chứng-thực-để-có-thể-comment)
     - [quy tắc làm api create: phải trả về dữ liệu sau khi tạo](#quy-tắc-làm-api-create-phải-trả-về-dữ-liệu-sau-khi-tạo)
-    - 
+    - [API xóa comment](#api-xóa-comment)
 
 
 ## xuất ra requirements
@@ -1625,3 +1625,34 @@ sẽ nhận được kết quả phản hồi, ví dụ:
 ```
 vô mysql courses_comment xem để tra 
 
+## API xóa comment 
+trong views.py thực hiện thêm class CommentViewSet
+```
+class CommentViewSet(viewsets.ViewSet, generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = serializers.CommentSerializer
+```
+đăng kus một router trong courses/urls.py
+```
+router.register("comments", views.CommentViewSet, basename="comments")
+```
+chạy runserver và kiểm tra 
+```
+http://127.0.0.1:8000/swagger/
+```
+tạo một file perms.py: courses/perms.py
+```
+from rest_framework import permissions
+```
+```
+class OwnerAuthenticated(permissions.IsAuthenticated):
+    pass
+```
+qua views.py import perms (permissions) vừa tạo 
+```
+import perms
+```
+trong CommentViewSet thêm:
+```
+permission_classes = [perms.OwnerAuthenticated]
+```
