@@ -68,3 +68,11 @@ class Interaction(BaseModel):
 
 class Comment(Interaction):
     content = models.CharField(max_length=255, null=False)
+
+
+class Like(Interaction):
+    active = models.BooleanField()  # like hoặc chưa like
+
+
+class Rating(Interaction):
+    rate = models.SmallIntegerField(default=0)  # đánh giá sao từ 1 đến 5

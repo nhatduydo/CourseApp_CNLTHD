@@ -1,4 +1,4 @@
-from courses.models import Category, Course, Lesson, Tag, User
+from courses.models import Category, Comment, Course, Lesson, Tag, User
 from rest_framework import serializers
 
 
@@ -59,3 +59,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer()  # để lấy avatar của user
+
+    class Meta:  # thực hiện ghi đè
+        model = Comment
+        fields = ["id", "content", "user"]

@@ -1,5 +1,5 @@
 from courses import paginators, serializers
-from courses.models import Category, Course, Lesson, User
+from courses.models import Category, Comment, Course, Lesson, User
 from django.shortcuts import render
 from rest_framework import generics, parsers, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -55,6 +55,27 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(active=True).all()
     serializer_class = serializers.LessonSerializer
+    permission_classes = [permissions.AllowAny]  # ai cũng được
+    # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
+
+    def get_permissions(self):
+        if self.action in ["add_comment"]:
+            return [permissions.IsAuthenticated()]
+        return self.permission_classes
+
+    @action(methods=["POST"], url_path="comments", detail=True)
+    def add_comment(self, request, pk):
+        # user đã chứng thực rồi sẽ nằm trong request.user
+        # tất cả dữ liệu từ body data lấy từ client lấy lên đều trong: request.data
+        c = Comment.objects.create(
+            user=request.user,
+            lesson=self.get_object(),
+            content=request.data.get("content"),
+        )
+
+        return Response(
+            serializers.CommentSerializer(c).data, status=status.HTTP_201_CREATED
+        )
 
 
 # để post và chèn vô => CreateAPIView
