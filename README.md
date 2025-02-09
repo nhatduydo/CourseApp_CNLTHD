@@ -62,8 +62,9 @@
 30. [đăng ký user](#đăng-ký-user)
     - [chạy postman kiểm tra](#chạy-postman-kiểm-tra)
 31. [upload hình ảnh lên couldinary](#upload-hình-ảnh-lên-couldinary)
-32. [lấy danh sách comment - api con của lessons](#lấy-danh-sách-comment---api-con-của-lessons)
- 
+32. [OAuth2](#oauth2)
+    - [Django OAuth Toolkits](#django-oauth-toolkits)
+    - [bắt đầu chứng thực bằng postman](#bắt-đầu-chứng-thực-bằng-postman)
 
 ## xuất ra requirements
 ```
@@ -1304,5 +1305,64 @@ value: nhat; duy; upload1; 1; chọn hình
 nhấn nút send để kiểm tra
 - nếu xuất hiện trường avatar và hiện 201 là đúng: đã trên server của cloudinary
 - vào media library để kiểm tra
-## lấy danh sách comment - api con của lessons
-- tạm để đó
+## OAuth2
+- là một giao thức ủy quyền (authorization) cho phép ứng dụng bên thứ ba truy cập tài nguyên trên một dịch vụ mà không cần chia sẻ thông tin đăng nhập.
+- Nó hoạt động dựa trên các token thay vì mật khẩu, giúp tăng cường bảo mật.
+## Django OAuth Toolkits
+- Django OAuth Toolkit (DOT) là một thư viện giúp tích hợp OAuth2 vào ứng dụng Django, cho phép tạo máy chủ OAuth2 để quản lý xác thực và cấp quyền truy cập API một cách an toàn
+
+cài đặt gói thư viện 
+```
+pip install django-oauth-toolkit
+```
+```
+pip freeze > requirements.txt
+```
+Cập nhật biến INSTALLED_APP trong settings.py
+```
+'oauth2_provider',
+```
+Bổ sung thông tin cấu hình cho biến REST_FRAMEWORK trong settings.py (tạo biến mới)
+```
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+    )
+}
+```
+Cập nhật urls cho URLConfig của project: urls ở ROOT hay: courseapp/urls.py
+```
+path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+```
+thực hiện chạy lại mikegrate và runserver để kiểm tra
+11. ## tạo migrations
+
+```
+ python manage.py migrate
+```
+```
+python manage.py runserver
+```
+vào admin để đằng nhập: 
+```
+http://127.0.0.1:8000/admin/
+```
+```
+http://127.0.0.1:8000/o/applications/
+```
+trong setting.py copy key bỏ vào 
+```
+CLiENT_ID = "uLZYLmAw9sFvEWOlPnyLlEGMiHXOrRLnag4IsmTK"
+CLIENT_SCERET = "7HUEH6pfe3vHkhPSVaPRradXkOIWNgxHijggGqiJyXLmckBC1hXu2YNrbd3DZoQhARJveQ8NjGZzENoxbnLIqVvQaNCgjCJcnELwhAaQgNZjgRqr1jfrYWxzYBmVMJCZ"
+```
+name: "tên tự do"
+client_type: "confidential"
+Authorization grant type: "resource owner password-based"
+=> save
+## bắt đầu chứng thực bằng postman
+- vào postman tạo post mới
+- url chứng thực, methods = POST
+  ```
+  http://127.0.0.1:8000/o/token/
+  ```
+body => form-data
