@@ -75,7 +75,7 @@
     - [API cập nhật comment](#api-cập-nhật-comment)
     - [API like](#api-like)
 
-[react native](#react-native)
+# [react native](#react-native)
 
 ## xuất ra requirements
 ```
