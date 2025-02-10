@@ -1485,7 +1485,7 @@ bởi vì nếu xuất là xuất rất nhiều
 trong models.py tạo class Like (tương tự class comment):
 ```
 class Like(Interaction):
-    active = models.BooleanField()  # like hoặc chưa like
+    active = models.BooleanField(default=True)  # like hoặc chưa like
 ```
 trong models.py tạo class Rating (đánh giá từ 1 -> 5):
 ```
@@ -1748,3 +1748,32 @@ tùy úng dụng:
 - facebook: một bài like 1 lần
 - zalo: một bài like nhiều lần (thả n trái tim vô được)
 - code này theo facebook => like 1 lần
+trong models.py thực hiện ghi đè class like
+```
+    class Meta:
+        unique_together = ('user', 'lesson')
+```
+trong views.py 
+```
+from courses.models import Like
+```
+trong class LessonViewSet thực hiện viết hàm like
+phải đăng nhập mới có quyền like, cập nhập hàm get_permissions
+```
+def get_permissions(self):
+        if self.action in ["add_comment", 'like']:
+            return [permissions.IsAuthenticated()]
+        return self.permission_classes
+```
+hàm like 
+```
+@action(methods=["POST"], url_path="like", detail=True)
+    def like(self, request, pk):
+        like, created = Like.objects.update_or_create(user=request.user, lesson=self.get_object())
+        if not created:
+            like.active = not like.active
+            like.save()
+
+        return Response(status=status.HTTP_200_OK)
+```
+# react native
