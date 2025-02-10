@@ -76,8 +76,7 @@
     - [API like](#api-like)  
  
  
- ## React-native
-
+React-native
 [react native](#react-native)
 
 ## xuất ra requirements
