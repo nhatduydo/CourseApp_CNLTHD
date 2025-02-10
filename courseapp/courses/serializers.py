@@ -41,7 +41,8 @@ class LessonSerializer(BaseSerializer):
 class LessonDetailSerializer(LessonSerializer):
     liked = serializers.SerializerMethodField()
 
-    def get_liked(self, request, lesson):
+    def get_liked(self, lesson):
+        request = self.context.get('request')
         if request.user.is_authenticated:
             return lesson.like_set.filter(active=True).exists()
 

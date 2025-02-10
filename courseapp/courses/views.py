@@ -54,7 +54,7 @@ class CourseViewSet(viewsets.ViewSet, generics.ListAPIView):
 
 class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     queryset = Lesson.objects.filter(active=True).all()
-    serializer_class = serializers.LessonSerializer
+    serializer_class = serializers.LessonDetailSerializer
     permission_classes = [permissions.AllowAny]  # ai cũng được
     # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
 
@@ -79,12 +79,12 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
 
     @action(methods=["POST"], url_path="like", detail=True)
     def like(self, request, pk):
-        like, created = Like.objects.update_or_create(user=request.user, lesson=self.get_object())
+        like, created = Like.objects.get_or_create(user=request.user, lesson=self.get_object())
         if not created:
             like.active = not like.active
             like.save()
 
-        return Response(serializers.LessonDetailSerializer(self.get_object()).data, status=status.HTTP_200_OK)
+        return Response(serializers.LessonDetailSerializer(self.get_object(), context={'request': request}).data, status=status.HTTP_200_OK)
 
 # để post và chèn vô => CreateAPIView
 
