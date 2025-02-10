@@ -1,5 +1,5 @@
 from courses import paginators, perms, serializers
-from courses.models import Category, Comment, Course, Lesson, User
+from courses.models import Category, Comment, Course, Lesson, Like, User
 from django.shortcuts import render
 from rest_framework import generics, parsers, permissions, status, viewsets
 from rest_framework.decorators import action
@@ -59,7 +59,7 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
     # tùy nhiên, ở dưới thì phải xác thực mới được comment => thực hiện ghi đè
 
     def get_permissions(self):
-        if self.action in ["add_comment"]:
+        if self.action in ["add_comment", 'like']:
             return [permissions.IsAuthenticated()]
         return self.permission_classes
 
@@ -77,8 +77,18 @@ class LessonViewSet(viewsets.ViewSet, generics.RetrieveAPIView):
             serializers.CommentSerializer(c).data, status=status.HTTP_201_CREATED
         )
 
+    @action(methods=["POST"], url_path="like", detail=True)
+    def like(self, request, pk):
+        like, created = Like.objects.update_or_create(user=request.user, lesson=self.get_object())
+        if not created:
+            like.active = not like.active
+            like.save()
+
+        return Response(serializers.LessonDetailSerializer(self.get_object()).data, status=status.HTTP_200_OK)
 
 # để post và chèn vô => CreateAPIView
+
+
 class UserViewset(viewsets.ViewSet, generics.CreateAPIView):
     queryset = User.objects.filter(is_active=True).all()
     serializer_class = serializers.UserSerializer
