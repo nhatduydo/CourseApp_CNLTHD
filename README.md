@@ -75,6 +75,7 @@
     - [API cập nhật comment](#api-cập-nhật-comment)
     - [API like](#api-like)
 
+[react native](#react-native)
 
 ## xuất ra requirements
 ```
@@ -1078,6 +1079,8 @@ class LessonSerializer(BaseSerializer):
     class Meta:
         model = Lesson
         fields = ["id", "subject", "image", "tags"]
+         phần này ở sau này, khi thêm thuộc tính nào thì bên serializers phải thêm vào như này
+        # fields = ["id", "subject", "image", "tags", 'content', 'created_date', 'updated_date']
 
 ```
 chuyển qua thực hiện viết hàm bên views.py 
@@ -1776,4 +1779,63 @@ hàm like
 
         return Response(status=status.HTTP_200_OK)
 ```
+trong serializers.py thực hiện thêm 1 class mới trong LessonSerializer
+```
+class LessonDetailSerializer(LessonSerializer):
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self, request, lesson):
+        if request.user.is_authenticated:
+            return lesson.like_set.filter(active=True).exists()
+
+    class Meta:
+        model = LessonSerializer.Meta.model
+        fields = LessonSerializer.Meta.fields + ['liked']
+
+```
+quay lại views.py thực hiện chỉnh code lại trong: LessonViewSet hàm like
+để biết lesson nào được like
+```
+    @action(methods=["POST"], url_path="like", detail=True)
+    def like(self, request, pk):
+        like, created = Like.objects.update_or_create(user=request.user, lesson=self.get_object())
+        if not created:
+            like.active = not like.active
+            like.save()
+
+        return Response(serializers.LessonDetailSerializer(self.get_object()).data, status=status.HTTP_200_OK)
+```
+thực hiện dùng postman kiểm thử like
 # react native
+1. [install react native](#install-react-native)
+
+
+
+
+
+
+## install react native
+```
+npm install -g create-react-native
+```
+```
+install -g create-react-native-app
+```
+cd đến vị trí của folder code
+```
+cd ..
+```
+```
+D:
+```
+```
+cd \personal\CourseApp\CourseApp_CNLTHD
+```
+lệnh này đã lỗi thời, tạm thời cài theo lệnh mới không theo hướng dẫn
+```
+create-react-native-app MyCourseMobileApp
+```
+lệnh mới
+```
+npx create-expo-app MyCourseMobileApp
+```
