@@ -73,8 +73,10 @@
     - [quy tắc làm api create: phải trả về dữ liệu sau khi tạo](#quy-tắc-làm-api-create-phải-trả-về-dữ-liệu-sau-khi-tạo)
     - [API xóa comment](#api-xóa-comment)
     - [API cập nhật comment](#api-cập-nhật-comment)
-    - [API like](#api-like)
- React-native
+    - [API like](#api-like)  
+ 
+ 
+ ## React-native
 
 [react native](#react-native)
 
