@@ -1807,7 +1807,9 @@ quay lại views.py thực hiện chỉnh code lại trong: LessonViewSet hàm l
         return Response(serializers.LessonDetailSerializer(self.get_object()).data, status=status.HTTP_200_OK)
 ```
 thực hiện dùng postman kiểm thử like
+
 # react native
+
 
 1. [install react native](#install-react-native)
 
