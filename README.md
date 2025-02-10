@@ -1786,7 +1786,8 @@ trong serializers.py thực hiện thêm 1 class mới trong LessonSerializer
 class LessonDetailSerializer(LessonSerializer):
     liked = serializers.SerializerMethodField()
 
-    def get_liked(self, request, lesson):
+    def get_liked(self, lesson):
+        request = self.context.get('request')
         if request.user.is_authenticated:
             return lesson.like_set.filter(active=True).exists()
 
@@ -1797,18 +1798,55 @@ class LessonDetailSerializer(LessonSerializer):
 ```
 quay lại views.py thực hiện chỉnh code lại trong: LessonViewSet hàm like
 để biết lesson nào được like
+chinhr lại serializer_class của hàm LessonViewSet
+```
+serializer_class = serializers.LessonDetailSerializer
+```
 ```
     @action(methods=["POST"], url_path="like", detail=True)
     def like(self, request, pk):
-        like, created = Like.objects.update_or_create(user=request.user, lesson=self.get_object())
+        like, created = Like.objects.get_or_create(user=request.user, lesson=self.get_object())
         if not created:
             like.active = not like.active
             like.save()
 
-        return Response(serializers.LessonDetailSerializer(self.get_object()).data, status=status.HTTP_200_OK)
+       return Response(serializers.LessonDetailSerializer(self.get_object(), context={'request': request}).data, status=status.HTTP_200_OK)
 ```
-thực hiện dùng postman kiểm thử like
-
+chạy lại makemigrations và kiểm thử
+```
+python manage.py makemigrations
+```
+```
+ python manage.py migrate
+```
+chạy server và thực hiện dùng postman kiểm thử like
+POST
+```
+http://127.0.0.1:8000/lessons/2/like/
+```
+headers truyền Authorization 
+```
+Bearer nUUAGlaXiY7LxgHUR1FCBFggSkV4rI
+```
+ví dụ kết quả lấy được: liked: true
+```
+{
+    "id": 2,
+    "subject": "bat dau html",
+    "image": "http://127.0.0.1:8000/static/lessons/2025/02/4.jpg",
+    "tags": [
+        {
+            "id": 1,
+            "name": "technologies"
+        }
+    ],
+    "content": "<p>aaaa</p>",
+    "created_date": "2025-02-08",
+    "updated_date": "2025-02-08T09:12:20.107330Z",
+    "liked": true
+}
+```
+Thực hiện triển khai lên python anywhere
 # react native
 
 
@@ -1844,3 +1882,16 @@ lệnh mới
 ```
 npx create-expo-app MyCourseMobileApp
 ```
+===
+để chạy được trên phòng máy không có wifi, sài lệnh này giúp các đường mạng khác nhau vẫn chạy được
+```
+npx expo start --tunne;
+```
+hướng dẫn của react-native
+
+To run your project, navigate to the directory and run one of the following npm commands.
+```cd MyCourseMobileApp```
+```npm run android```
+```npm run ios``` # you need to use macOS to build the iOS project - use the Expo app if you need to do iOS development without a Mac
+```npm run web```
+  
