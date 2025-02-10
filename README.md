@@ -75,7 +75,7 @@
     - [API cập nhật comment](#api-cập-nhật-comment)
     - [API like](#api-like)
 # React-native
-[react native](#react-native)
+   [react native](#react-native)
 
 ## xuất ra requirements
 ```
@@ -1807,6 +1807,7 @@ quay lại views.py thực hiện chỉnh code lại trong: LessonViewSet hàm l
 ```
 thực hiện dùng postman kiểm thử like
 # react native
+
 1. [install react native](#install-react-native)
 
 
