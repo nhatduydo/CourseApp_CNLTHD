@@ -1885,7 +1885,7 @@ npx create-expo-app MyCourseMobileApp
 ===
 để chạy được trên phòng máy không có wifi, sài lệnh này giúp các đường mạng khác nhau vẫn chạy được
 ```
-npx expo start --tunne;
+npx expo start --tunnel
 ```
 ## hướng dẫn của react-native
 To run your project, navigate to the directory and run one of the following npm commands.  
