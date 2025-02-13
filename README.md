@@ -1851,6 +1851,7 @@ Thực hiện triển khai lên python anywhere
 
 
 1. [install react native](#install-react-native)
+2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
 
 
 
@@ -1894,3 +1895,8 @@ To run your project, navigate to the directory and run one of the following npm 
 ```npm run ios``` # you need to use macOS to build the iOS project - use the Expo app if you need to do iOS development without a Mac  
 ```npm run web```  
   
+## hướng dẫn kết nội điện thoại cụ thể
+- kết nối điện thoại với laptop (phải dùng dây)
+- trên điện thoại: vào cài đặt > giới thiệu điện thoại > thông tin phần mềm > số bản dựng (nhấn 7 lần) => trở thành nhà phát triển
+- vào nhà phát triển bật chức năng: bật gỡ lỗi qua USB
+- quay lại máy tính thực hiện code trên
