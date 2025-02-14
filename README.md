@@ -1865,7 +1865,7 @@ Thực hiện triển khai lên python anywhere
 npm install -g create-react-native
 ```
 ```
-install -g create-react-native-app
+npm install -g create-react-native-app
 ```
 cd đến vị trí của folder code
 ```
