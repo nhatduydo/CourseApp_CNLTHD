@@ -1852,8 +1852,9 @@ Thực hiện triển khai lên python anywhere
 
 1. [install react native](#install-react-native)
 2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
-3. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
-4. [code Home](#code-home)
+3. [sử dụng axios để truy vấn](#sử-dụng-axios-để-truy-vấn)
+4. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
+5. [code Home](#code-home)
 
 
 
@@ -1925,6 +1926,10 @@ npx expo start
 › Press o │ open project code in your editor
 
 › Press ? │ show all commands
+```
+## sử dụng axios để truy vấn
+```
+npm install axios
 ```
 ## tạo cây thư mục trong MyCourseMobileApp
 tạo folder:  
