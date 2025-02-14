@@ -1853,6 +1853,7 @@ Thực hiện triển khai lên python anywhere
 1. [install react native](#install-react-native)
 2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
 3. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
+4. [code Home](#code-home)
 
 
 
@@ -1928,5 +1929,33 @@ MyCourseMobileApp > styles > MyStyles.js
 MyCourseMobileApp > components    
 + Home > Home.js và styles.js
 + user > Login.js và user.js  
+## code Home
+trong components\Home\Home.js
+```
+import { View } from "react-native/types"
+import MyStyles from "../../styles/MyStyles"
 
-                                             
+const Home = () => {
+    return (
+        <View style={MyStyles.container}>
+            <Text>HOME</Text>
+        </View>
+    )
+}
+
+export default Home
+```
+trong styles/MyStyles.js
+```
+import { StyleSheet } from "react-native/types"
+
+export default StyleSheet.create({
+    container: {
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+})
+```
+Nếu muốn css chỉ dành cho Home.js vào: \components\Home\styles.js
+```
