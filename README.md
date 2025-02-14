@@ -1923,8 +1923,9 @@ To run your project, navigate to the directory and run one of the following npm 
 ```
 ## tạo cây thư mục trong MyCourseMobileApp
 tạo folder:  
-MyCourseMobileApp > components   + Home > Home.js và styles.js  
-                                 + user > Login.js và user.js  
+MyCourseMobileApp > components    
++ Home > Home.js và styles.js  
++ user > Login.js và user.js  
 MyCourseMobileApp > configs  
 MyCourseMobileApp > styles > MyStyles.js  
                                              
