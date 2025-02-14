@@ -1852,6 +1852,7 @@ Thực hiện triển khai lên python anywhere
 
 1. [install react native](#install-react-native)
 2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
+3. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
 
 
 
@@ -1920,3 +1921,10 @@ To run your project, navigate to the directory and run one of the following npm 
 
 › Press ? │ show all commands
 ```
+## tạo cây thư mục trong MyCourseMobileApp
+tạo folder: 
+MyCourseMobileApp > components   + Home > Home.js và styles.js
+                                 + user > Login.js và user.js
+MyCourseMobileApp > configs
+MyCourseMobileApp > styles > MyStyles.js
+                                             
