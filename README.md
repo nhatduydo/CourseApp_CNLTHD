@@ -1852,6 +1852,9 @@ Thực hiện triển khai lên python anywhere
 
 1. [install react native](#install-react-native)
 2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
+3. [sử dụng axios để truy vấn](#sử-dụng-axios-để-truy-vấn)
+4. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
+5. [code Home](#code-home)
 
 
 
@@ -1863,7 +1866,7 @@ Thực hiện triển khai lên python anywhere
 npm install -g create-react-native
 ```
 ```
-install -g create-react-native-app
+npm install -g create-react-native-app
 ```
 cd đến vị trí của folder code
 ```
@@ -1894,7 +1897,11 @@ To run your project, navigate to the directory and run one of the following npm 
 ```npm run android```  
 ```npm run ios``` # you need to use macOS to build the iOS project - use the Expo app if you need to do iOS development without a Mac  
 ```npm run web```  
-  
+
+## để chạy: 
+```
+npx expo start
+```
 ## hướng dẫn kết nối điện thoại cụ thể
 - kết nối điện thoại với laptop (phải dùng dây)
 - trên điện thoại: vào cài đặt > giới thiệu điện thoại > thông tin phần mềm > số bản dựng (nhấn 7 lần) => trở thành nhà phát triển
@@ -1919,4 +1926,45 @@ To run your project, navigate to the directory and run one of the following npm 
 › Press o │ open project code in your editor
 
 › Press ? │ show all commands
+```
+## sử dụng axios để truy vấn
+```
+npm install axios
+```
+## tạo cây thư mục trong MyCourseMobileApp
+tạo folder:  
+MyCourseMobileApp > configs  
+MyCourseMobileApp > styles > MyStyles.js  
+MyCourseMobileApp > components    
++ Home > Home.js và styles.js
++ user > Login.js và user.js  
+## code Home
+trong components\Home\Home.js
+```
+import { View } from "react-native/types"
+import MyStyles from "../../styles/MyStyles"
+
+const Home = () => {
+    return (
+        <View style={MyStyles.container}>
+            <Text>HOME</Text>
+        </View>
+    )
+}
+
+export default Home
+```
+trong styles/MyStyles.js
+```
+import { StyleSheet } from "react-native/types"
+
+export default StyleSheet.create({
+    container: {
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+})
+```
+Nếu muốn css chỉ dành cho Home.js vào: \components\Home\styles.js
 ```
