@@ -73,7 +73,10 @@
     - [quy tắc làm api create: phải trả về dữ liệu sau khi tạo](#quy-tắc-làm-api-create-phải-trả-về-dữ-liệu-sau-khi-tạo)
     - [API xóa comment](#api-xóa-comment)
     - [API cập nhật comment](#api-cập-nhật-comment)
-    - [API like](#api-like)  
+    - [API like](#api-like)
+33. [pythonanywhere](#pythonanywhere)
+    - [tạo cơ sở dữ liệu](#tạo-cơ-sở-dữ-liệu)
+    - [cấu hình web](#cấu-hình-web)
  
  
 React-native
@@ -1846,7 +1849,125 @@ ví dụ kết quả lấy được: liked: true
     "liked": true
 }
 ```
+
+# pythonanywhere
 Thực hiện triển khai lên python anywhere
+- đăng nhập vào pythonanywhere
+- vào mục consoles > bash > git clone <github>
+
+xem vị trí đang đứng hiện tại 
+```
+pwd
+```
+di chuyển vào thư mục dưới để tạo môi trường ảo
+```
+cd .virtualenvs/
+```
+tạo môi trường ảo courses_venv (có thể thay thế tên khác)
+```
+virtualenv courses_venv --python=/usr/bin/python3.10
+```
+kích hoạt môi trường ảo
+```
+source courses_venv/bin/activate
+```
+lùi ra 1 cấp, và thực hiện cài file requirements.txt
+```
+cd ..
+```
+```
+cd CourseApp_CNLTHD/
+```
+```
+cd courseapp/
+```
+```
+pip install -r requirements.txt
+```
+trong lúc chờ cài, chuyển trang mới tạo cơ sở dữ liệu
+## tạo cơ sở dữ liệu
+trong trang pythonanywhere > Databases
+tạo tên 1 database mới và chọn create
+// qua file > vào thư mục của mình > tìm và mở file init => đây chính là file kết nối CSDL (đây là bên saleapp, bên course init trống)
+qua file > vào thư mục của mình > courseapp > settings.py > chỉnh sửa lại các trường 
+- name: tên database mới tạo trên pythonanywhere
+- user: copy bên pythonanywhere
+- host: copy bên pythonanywhere
+- thêm port: "3306" //phần này chat chỉ
+```
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "nhatduy242$coursedb",
+        "USER": "nhatduy242",
+        "PASSWORD": "Admin@123",
+        "HOST": "nhatduy242.mysql.pythonanywhere-services.com",  # mặc định localhost
+        "PORT": "3306", 
+    }
+}
+```
+sau đó lưu và thực hiện chạy lại model bằng makemikegration
+```
+cd ~/CourseApp_CNLTHD/courseapp/
+```
+```
+python manage.py migrate
+```
+thực hiện kiểm tra
+- tạo một page pythonanywhere mới > consoles > MySQL
+```
+show databases;
+```
+dùng lệnh use <database> để chọn database cần dùng 
+```
+use nhatduy242$coursedb
+```
+dùng lệnh dưới để xem các table của databases
+```
+ show tables;
+```
+viết thử một lệnh truy vấn (chưa có dữ liệu đang trống trơn :'<)
+
+## cấu hình web
+vào page pythonanywhere > web > add new a web app > next > chọn manual (thủ công) hoặc Django > python 3.10 > next và đợi
+lúc này nó sẽ tạo ra cho mình cầu trúc của một web app  
+dưới đây là domain của trang web
+```
+nhatduy242.pythonanywhere.com
+```
+lăn xuống dưới bắt đầu cấu hình
+Source code:
+gõ pwd để lấy đường dẫn aource code
+```
+pwd
+```
+```
+/home/nhatduy242/CourseApp_CNLTHD/courseapp
+```
+tại Virtualenv: chỉ đường dẫn của môi trường ảo
+```
+cd ../..
+```
+```
+cd .virtualenvs/courses_venv/
+```
+```
+pwd
+```
+```
+
+```
+## kích hoạt lại môi trường ảo nếu nó bị đóng
+```
+source /home/nhatduy242/.virtualenvs/courses_venv/bin/activate
+```
+
+
+
+
+
+
+
 # react native
 
 
