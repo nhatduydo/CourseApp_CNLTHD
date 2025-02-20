@@ -1937,7 +1937,7 @@ nhatduy242.pythonanywhere.com
 ```
 lăn xuống dưới bắt đầu cấu hình
 Source code:
-gõ pwd để lấy đường dẫn aource code
+gõ pwd để lấy đường dẫn source code
 ```
 pwd
 ```
@@ -1955,7 +1955,22 @@ cd .virtualenvs/courses_venv/
 pwd
 ```
 ```
-
+/home/nhatduy242/.virtualenvs/courses_venv
+```
+vào phần WSGI configuration file:
+thực hiện mở comment phần django và thay đổi một số thứ
+truyền path thành path của mình
+```
+path = '/home/nhatduy242/CourseApp_CNLTHD/courseapp'
+```
+```
+os.environ['DJANGO_SETTINGS_MODULE'] = 'courseapp.settings'
+```
+lưu lại và thực hiện hiện reload lại web
+lăn xuống dưới, ở dưới sẽ có 3 file log, nếu có lỗi gì thì có thể coi trong log này
+ settings.py
+```
+ALLOWED_HOSTS = ['nhatduy242.pythonanywhere.com']
 ```
 ## kích hoạt lại môi trường ảo nếu nó bị đóng
 ```
