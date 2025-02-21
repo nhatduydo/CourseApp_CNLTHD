@@ -82,6 +82,10 @@
 React-native
 [react native](#react-native)
 
+[Phát triển rest API với django rest framework](#phát-triển-rest-api-với-django-rest-framework)  
+- [tạo trang đầu tiên đè lên mặc định của django](#tạo-trang-đầu-tiên-đè-lên-mặc-định-của-django)  
+
+
 ## xuất ra requirements
 ```
 pip freeze > requirements.txt
@@ -2104,4 +2108,56 @@ export default StyleSheet.create({
 })
 ```
 Nếu muốn css chỉ dành cho Home.js vào: \components\Home\styles.js
+
+
+
+
+
+
+
+
+
+# Phát triển rest API với django rest framework
+```
+python -m venv venv
+```
+```
+venv\Scripts\activate
+```
+```
+pip install django
+```
+để kiểm tra có thể gõ 
+```
+python
+```
+```
+import django
+```
+```
+print(django.get_version())
+```
+tạo một project: courseapp
+```
+django-admin startproject courseapp
+```
+chạy project lên
+```
+c/d courseapp
+```
+```
+python manage.py runserver
+```
+```
+django-admin startapp courses
+```
+## tạo trang đầu tiên đè lên mặc định của django
+view.py 
+```
+from django.http import HttpResponse
+
+
+def index(request):
+
+    return HttpResponse("eCourseApp")
 ```
