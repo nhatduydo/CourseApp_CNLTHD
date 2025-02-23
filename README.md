@@ -1994,7 +1994,7 @@ source /home/nhatduy242/.virtualenvs/courses_venv/bin/activate
 2. [hướng dẫn kết nối điện thoại cụ thể](#hướng-dẫn-kết-nối-điện-thoại-cụ-thể)
 3. [sử dụng axios để truy vấn](#sử-dụng-axios-để-truy-vấn)
 4. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
-5. [code Home](#code-home)
+5. [hiển thị code đầu tiên](#hiển-thị-code-đầu-tiên)
 
 
 
@@ -2077,18 +2077,20 @@ tạo folder:
 MyCourseMobileApp > configs  
 MyCourseMobileApp > styles > MyStyles.js  
 MyCourseMobileApp > components    
-+ Home > Home.js và styles.js
-+ user > Login.js và user.js  
++ Home > Home.js và Styles.js
++ user > Login.js và User.js  
+## hiển thị code đầu tiên
 ## code Home
 trong components\Home\Home.js
 ```
-import { View } from "react-native/types"
+import { Text, View } from "react-native"
 import MyStyles from "../../styles/MyStyles"
+import Styles from "./Styles"
 
 const Home = () => {
     return (
         <View style={MyStyles.container}>
-            <Text>HOME</Text>
+            <Text style={Styles.subject}>HOME - trang chủ</Text>
         </View>
     )
 }
@@ -2097,7 +2099,7 @@ export default Home
 ```
 trong styles/MyStyles.js
 ```
-import { StyleSheet } from "react-native/types"
+import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
     container: {
@@ -2108,8 +2110,91 @@ export default StyleSheet.create({
 })
 ```
 Nếu muốn css chỉ dành cho Home.js vào: \components\Home\styles.js
+```
+import { StyleSheet } from "react-native"
 
+export default StyleSheet.create({
+    subject: {
+        fontSize: 30,
+        color: "blue"
+    }
+})
+```
+sau đó, để thực hiện hiển thị, trong index.tsx thực hiện thêm class Home vào
+```
+import Home from "../components/Home/Home";
+```
+```
+<Home/>
+```
+trang sẽ trở thành
+```
+import { StyleSheet, Text, View } from "react-native";
+import Home from "../components/Home/Home";
+export default function Index() {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }
+      }
+    >
+      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text style={styles.txt}>Xin chào nhất duy, hôm nay là ngày 23/2/2025</Text>
+    <Home/>
+    </View>
+  );
+}
 
+const styles = StyleSheet.create({
+  txt: {
+    fontSize: 30,
+    color: "blue",
+  }
+})
+```
+cài gói thư viện
+```
+npm install @react-navigation/native
+```
+```
+npm install @react-navigation/drawer
+```
+```
+npm install react-native-gesture-handler react-native-reanimated
+```
+trong User > Login.js 
+```
+import { View } from "react-native"
+import { MyStyle } from "../../styles/MyStyles"
+const Login = () => {
+    return (
+        <View style = {MyStyle.container}>
+            <Text>Login</Text>
+        </View>
+    )
+}
+```
+thêm trong thư mục babel.config.js
+```
+babel.config.js
+```
+theo đường dẫn sau: 
+```
+MyCourseMobileApp\node_modules\@expo\cli\static\template
+```
+file sé trở thành 
+```
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+    plugins: ['react-native-reanimated/plugin']
+  };
+};
+```
 
 
 
