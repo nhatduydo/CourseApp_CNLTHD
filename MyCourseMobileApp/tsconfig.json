@@ -3,10 +3,14 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@styles/*": ["styles/*"],
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
   },
   "include": [
     "**/*.ts",
@@ -14,4 +18,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]
+  
 }
