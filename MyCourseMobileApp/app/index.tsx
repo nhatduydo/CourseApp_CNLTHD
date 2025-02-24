@@ -1,19 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { StyleSheet } from "react-native";
 import Home from "../components/Home/Home";
+import Login from "../components/User/Login";
+
+const Drawer = createDrawerNavigator()
+
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }
-      }
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-      <Text style={styles.txt}>Xin chào nhất duy, hôm nay là ngày 23/2/2025</Text>
-    <Home/>
-    </View>
+    // <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={Home}/>
+        <Drawer.Screen name="Login" component={Login}/>
+      </Drawer.Navigator>
+    //</NavigationContainer>
   );
 }
 

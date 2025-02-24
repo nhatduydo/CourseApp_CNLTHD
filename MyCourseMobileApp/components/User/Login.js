@@ -1,9 +1,10 @@
-import { View } from "react-native"
-import { MyStyle } from "../../styles/MyStyles"
+import { Text, View } from "react-native"
 const Login = () => {
     return (
-        <View style = {MyStyle.container}>
-            <Text>Login</Text>
+        <View >
+            <Text>Login - đăng nhập</Text>
         </View>
     )
 }
+
+export default Login
