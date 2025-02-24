@@ -2318,6 +2318,9 @@ code Home ở trên hiện tại chỉ chạy được vói đường dẫn pyth
 ## viết css riêng cho API vừa lấy được
 trong Home > Home.js thực hiện css thêm cho courses
 ```
+import { ActivityIndicator, Image, Text, View } from "react-native"
+```
+```
 return (
         <View style={MyStyles.container}>
             <Text style={Styles.subject}>HOME - trang chủ</Text>
