@@ -1995,6 +1995,16 @@ source /home/nhatduy242/.virtualenvs/courses_venv/bin/activate
 3. [sử dụng axios để truy vấn](#sử-dụng-axios-để-truy-vấn)
 4. [tạo cây thư mục trong MyCourseMobileApp](#tạo-cây-thư-mục-trong-mycoursemobileapp)
 5. [hiển thị code đầu tiên](#hiển-thị-code-đầu-tiên)
+6. [cấu hình API](#cấu-hình-api)
+   - [Nạp API course ở trên thử](#nạp-api-course-ở-trên-thử)
+
+
+
+
+
+
+
+
 
 
 
@@ -2176,10 +2186,12 @@ const Login = () => {
         </View>
     )
 }
+
+export default Login
 ```
 thêm trong thư mục babel.config.js
 ```
-babel.config.js
+plugins: ['react-native-reanimated/plugin']
 ```
 theo đường dẫn sau: 
 ```
@@ -2195,6 +2207,129 @@ module.exports = function (api) {
   };
 };
 ```
+thực hiện chỉnh sửa code trong index.tsx
+```
+import { NavigationContainer } from "@react-navigation/native";
+```
+```
+import { createDrawerNavigator } from "@react-navigation/drawer";
+```
+```
+const Drawer = createDrawerNavigator
+```
+trong hàm return của index thực hiện chỉnh sửa code
+```
+const Drawer = createDrawerNavigator()
+
+export default function Index() {
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={Home}/>
+        <Drawer.Screen name="Login" component={Login}/>
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}
+```
+## cấu hình API
+tạo file: configgs > API.js
+```
+import axios from "axios"
+```
+```
+const HOST = "http://127.0.0.1:8000"
+```
+```
+export const endpoints = {
+    'categories': '/categories/',
+    'courses': '/courses/'
+}
+```
+```
+export const authApi = () => {
+    return axios.create({
+        baseURL: HOST,
+        headers: {
+            'Authorization': `Bearer ...`
+        }
+    })
+}
+```
+```
+export default axios.create({
+    baseURL: HOST
+})
+```
+## Nạp API course ở trên thử
+thực hiện gọi API tại trang Home > Home.js
+```
+import React from "react"
+import { ActivityIndicator, Text, View } from "react-native"
+```
+## khái niệm async
+async:
+- để khai báo một hàm bất đồng bộ (asynchronous function)
+- luôn trả về một Promise
+- giúp xử lý các tác vụ bất đồng bộ như gọi API, đọc/ghi file
+- thực hiện các tác vụ mất thời gian mà không chặn chương trình.
+```
+import API, { endpoints } from "../../configs/API"
+```
+```
+const Home = () => {
+    const [courses, setCourses] = React.useState(null)
+
+    React.useEffect(() => {
+        const loadCourses = async () => {
+            try {
+                let res = await API.get(endpoints('courses'))
+                setCourses(res.data.results)
+            } catch {
+                console.error(ex);
+            }
+        }
+        loadCourses();
+    }, []);
+
+    return (
+        <View style={MyStyles.container}>
+            <Text style={Styles.subject}>HOME - trang chủ</Text>
+
+            {courses === null ? <ActivityIndicator/> : <>
+                {courses.map(c => (
+                     <View key={c.id}>
+                        <Text>{ c.subject }</Text>
+                    </View>
+                ))}
+            </>}
+        </View>
+    )
+}
+
+export default Home
+```
+code Home ở trên không lỗi nhưng hiện tại chưa get được API, chưa biết lý do
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
