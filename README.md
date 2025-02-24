@@ -1997,6 +1997,7 @@ source /home/nhatduy242/.virtualenvs/courses_venv/bin/activate
 5. [hiển thị code đầu tiên](#hiển-thị-code-đầu-tiên)
 6. [cấu hình API](#cấu-hình-api)
    - [Nạp API course ở trên thử](#nạp-api-course-ở-trên-thử)
+   - [viết css riêng cho API vừa lấy được](#viết-css-riêng-cho-api-vừa-lấy-được)
 
 
 
@@ -2238,7 +2239,8 @@ tạo file: configgs > API.js
 import axios from "axios"
 ```
 ```
-const HOST = "http://127.0.0.1:8000"
+// const HOST = "http://127.0.0.1:8000" 
+const HOST = "https://thanhduong.pythonanywhere.com"
 ```
 ```
 export const endpoints = {
@@ -2281,15 +2283,18 @@ const Home = () => {
     const [courses, setCourses] = React.useState(null)
 
     React.useEffect(() => {
+        console.log("🔥🔥🔥 useEffect đang chạy...");
         const loadCourses = async () => {
             try {
-                let res = await API.get(endpoints('courses'))
+                let res = await API.get(endpoints.courses)
+                console.log("Dữ liệu lấy được:", res.data)
                 setCourses(res.data.results)
-            } catch {
-                console.error(ex);
+            } catch (error) {
+                console.error("❌ Lỗi khi tải dữ liệu:", error);
             }
         }
         loadCourses();
+        console.log("🔥🔥 đã chạy qua loadCoursees");
     }, []);
 
     return (
@@ -2309,8 +2314,33 @@ const Home = () => {
 
 export default Home
 ```
-code Home ở trên không lỗi nhưng hiện tại chưa get được API, chưa biết lý do
-
+code Home ở trên hiện tại chỉ chạy được vói đường dẫn pythonanywhere của anh thành, chạy link local bị lỗi get dữ liệu chưa fix được
+## viết css riêng cho API vừa lấy được
+trong Home > Home.js thực hiện css thêm cho courses
+```
+return (
+        <View style={MyStyles.container}>
+            <Text style={Styles.subject}>HOME - trang chủ</Text>
+            <ScrollView style={{ flex: 1, flexDirection: 'row' }}>
+                {courses === null ? <ActivityIndicator /> : <>
+                    {courses.map(c => (
+                        <View key={c.id}>
+                            <View>
+                                <Image
+                                    style={{ width: 100, height: 100, resizeMode: "cover", borderRadius: 5 }}
+                                    source={{ uri: c.image }}
+                                />
+                            </View>
+                            <View >
+                                <Text style={{ marginTop: 5, fontSize: 16, fontWeight: "bold" }}>{c.subject}</Text>
+                            </View>
+                        </View>
+                    ))}
+                </>}
+            </ScrollView>
+        </View >
+    )
+```
 
 
 
