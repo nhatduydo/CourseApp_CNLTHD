@@ -1981,8 +1981,26 @@ ALLOWED_HOSTS = ['nhatduy242.pythonanywhere.com']
 source /home/nhatduy242/.virtualenvs/courses_venv/bin/activate
 ```
 
+## kiểm tra tests cơ bản
+trong file tests.py
+```
+from django.test import TestCase, SimpleTestCase
+```
+```
+class SimpleTests(SimpleTestCase):
+	def test_home_page_status(self):
+		response = self.client.get('/')
+		self.asserEquals(response.status_code, 200)
+```
+thực hiện để chạy all file test
+```
+python manage.py test
+```
+thực hiện để chạy file home
 
-
+```
+python manage.py test home 
+```
 
 
 
