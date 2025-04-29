@@ -2004,6 +2004,26 @@ thực hiện để chạy file home
 python manage.py test home 
 ```
 
+# lấy tên theo slug name 
+```
+python manage.py shell
+```
+
+
+```
+# Import tất cả các model
+from accommodationSearch.models import *
+
+# Lấy tất cả các model có thuộc tính slug_source
+models_with_slug = [model for model in [Landlord, Amenity, Post, Tenant, Motel, Room, Comment] if hasattr(model, 'slug_source')]
+
+# In ra thông tin slug của tất cả các đối tượng
+for model in models_with_slug:
+    print(f"\n=== {model.__name__} ===")
+    for obj in model.objects.all():
+        print(f" → Slug: {obj.slug}")
+```
+
 # đổi tên slug name 
 ```
 python manage.py shell
@@ -2022,6 +2042,21 @@ for room in Room.objects.all():
     room.save()
     print(f"Đã cập nhật: {room.room_name} -> {new_slug}")
 ```
+## lấy tên slug name room
+```
+from accommodationSearch.models import Room
+
+# In ra dạng bảng
+print("=== DANH SÁCH SLUG CỦA ROOM ===")
+for room in Room.objects.all():
+    print(f"→ Slug: {room.slug}")
+```
+
+
+
+
+
+
 
 
 # react native
@@ -2453,22 +2488,4 @@ def index(request):
 ```
 
 
-# lấy tên theo slug name 
-```
-python manage.py shell
-```
 
-
-```
-# Import tất cả các model
-from accommodationSearch.models import *
-
-# Lấy tất cả các model có thuộc tính slug_source
-models_with_slug = [model for model in [Landlord, Amenity, Post, Tenant, Motel, Room, Comment] if hasattr(model, 'slug_source')]
-
-# In ra thông tin slug của tất cả các đối tượng
-for model in models_with_slug:
-    print(f"\n=== {model.__name__} ===")
-    for obj in model.objects.all():
-        print(f" → Slug: {obj.slug}")
-```
