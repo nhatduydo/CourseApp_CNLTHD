@@ -78,7 +78,8 @@
     - [tạo cơ sở dữ liệu](#tạo-cơ-sở-dữ-liệu)
     - [cấu hình web](#cấu-hình-web)
 
- 40. [lấy tên theo slug name](#lấy-tên-theo-slug-name)
+ 34. [lấy tên theo slug name](#lấy-tên-theo-slug-name)
+ 35. [đổi tên slug name](#đổi-tên-slug-name)
  
 React-native
 [react native](#react-native)
@@ -2003,7 +2004,24 @@ thực hiện để chạy file home
 python manage.py test home 
 ```
 
+# đổi tên slug name 
+```
+python manage.py shell
+```
+```
+from accommodationSearch.models import Room
+from django.utils.text import slugify
+from unidecode import unidecode
 
+# Cập nhật slug cho tất cả các phòng
+for room in Room.objects.all():
+    # Tạo slug mới từ tên motel và tên phòng
+    new_slug = slugify(unidecode(f"{room.motel.motel_name}-{room.room_name}"))
+    # Cập nhật slug
+    room.slug = new_slug
+    room.save()
+    print(f"Đã cập nhật: {room.room_name} -> {new_slug}")
+```
 
 
 # react native
