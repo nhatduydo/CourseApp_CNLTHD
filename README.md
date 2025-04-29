@@ -77,7 +77,8 @@
 33. [pythonanywhere](#pythonanywhere)
     - [tạo cơ sở dữ liệu](#tạo-cơ-sở-dữ-liệu)
     - [cấu hình web](#cấu-hình-web)
- 
+
+ 40. [lấy tên theo slug name](#lấy-tên-theo-slug-name)
  
 React-native
 [react native](#react-native)
@@ -2431,4 +2432,25 @@ from django.http import HttpResponse
 def index(request):
 
     return HttpResponse("eCourseApp")
+```
+
+
+# lấy tên theo slug name 
+```
+python manage.py shell
+```
+
+
+```
+# Import tất cả các model
+from accommodationSearch.models import *
+
+# Lấy tất cả các model có thuộc tính slug_source
+models_with_slug = [model for model in [Landlord, Amenity, Post, Tenant, Motel, Room, Comment] if hasattr(model, 'slug_source')]
+
+# In ra thông tin slug của tất cả các đối tượng
+for model in models_with_slug:
+    print(f"\n=== {model.__name__} ===")
+    for obj in model.objects.all():
+        print(f" → Slug: {obj.slug}")
 ```
