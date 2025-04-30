@@ -80,6 +80,8 @@
 
  34. [lấy tên theo slug name](#lấy-tên-theo-slug-name)
  35. [đổi tên slug name](#đổi-tên-slug-name)
+ 36. [ngrok Biến localhost thành link public](#ngrok-biến-localhost-thành-link-public)
+
  
 React-native
 [react native](#react-native)
@@ -2051,6 +2053,36 @@ print("=== DANH SÁCH SLUG CỦA ROOM ===")
 for room in Room.objects.all():
     print(f"→ Slug: {room.slug}")
 ```
+
+# ngrok - Biến localhost thành link public
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
