@@ -81,7 +81,7 @@
  34. [lấy tên theo slug name](#lấy-tên-theo-slug-name)
  35. [đổi tên slug name](#đổi-tên-slug-name)
  36. [ngrok Biến localhost thành link public](#ngrok-biến-localhost-thành-link-public)
-
+ 37. [pythonanywhere ver2](#pythonanywhere-ver2)
  
 React-native
 [react native](#react-native)
@@ -2056,6 +2056,39 @@ from accommodationSearch.models import Room
 print("=== DANH SÁCH SLUG CỦA ROOM ===")
 for room in Room.objects.all():
     print(f"→ Slug: {room.slug}")
+```
+
+# pythonanywhere ver2
+```
+
+git clone --single-branch --branch duy https://github.com/nhatduydo/SystemForSearchingAccommodations.git
+Username for 'https://github.com': nhatduy242@gmail.com
+Password for 'https://nhatduy242%40gmail.com@github.com': 
+pwd
+cd .virtualenvs/
+virtualenv venv  --python=/usr/bin/python3.10
+source venv/bin/activate
+python -m pip install --upgrade pip
+cd ~/SystemForSearchingAccommodations
+pip install -r requirements.txt
+
+mysql: mk Admin@123
+chỉnh sửa setttings
+
+
+cd accommodationSearchApp/
+export PYTHONPATH=/home/donhatduy/SystemForSearchingAccommodations
+python manage.py makemigrations
+python manage.py migrate
+
+
+show databases;
+use donhatduy$rentalmanagementdb;
+show tables;
+ select * from accommodationSearch_landlord;
+
+
+D:\BTL\SystemForSearchingAccommodations\accommodationSearchApp\accommodationSearchApp\settings.py
 ```
 
 # ngrok - Biến localhost thành link public
