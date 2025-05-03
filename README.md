@@ -1863,6 +1863,10 @@ Thực hiện triển khai lên python anywhere
 - đăng nhập vào pythonanywhere
 - vào mục consoles > bash > git clone <github>
 
+```
+git clone --single-branch --branch duy https://github.com/nhatduydo/SystemForSearchingAccommodations.git
+```
+
 xem vị trí đang đứng hiện tại 
 ```
 pwd
