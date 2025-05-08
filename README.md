@@ -82,7 +82,7 @@
  35. [đổi tên slug name](#đổi-tên-slug-name)
  36. [ngrok Biến localhost thành link public](#ngrok-biến-localhost-thành-link-public)
  37. [pythonanywhere ver2](#pythonanywhere-ver2)
- 
+ 38. [kết nối Tailscale public API](#kết-nối-Tailscale-public-API)
 React-native
 [react native](#react-native)
 
@@ -2092,7 +2092,19 @@ D:\BTL\SystemForSearchingAccommodations\accommodationSearchApp\accommodationSear
 ```
 
 # ngrok - Biến localhost thành link public
+# kết nối Tailscale public API
+hướng dẫn chạy ngrok
+- tải Tailscale
+- nhatduy096@gmail.com
+ máy linux 
++ ping 100.85.57.9
++ sudo tailscale up
++ ngrok http http://100.85.57.9:8000 với ip của máy window
 
+
+máy window: 
++ ping 100.85.57.9 -c 4
++ python manage.py runserver 0.0.0.0:8000 
 
 
 
