@@ -2099,15 +2099,26 @@ D:\BTL\SystemForSearchingAccommodations\accommodationSearchApp\accommodationSear
 hướng dẫn chạy ngrok
 - tải Tailscale
 - nhatduy096@gmail.com
- máy linux 
-+ ping 100.85.57.9
-+ sudo tailscale up
-+ ngrok http http://100.85.57.9:8000 với ip của máy window
+ máy linux
+```
+ping 100.85.57.9
+```
+```
+sudo tailscale up
+```
+```
+ngrok http http://100.85.57.9:8000
+```
++ với ip của máy window
 
 
 máy window: 
-+ ping 100.85.57.9 -c 4
-+ python manage.py runserver 0.0.0.0:8000 
+```
+ping 100.85.57.9 -c 4
+```
+```
+python manage.py runserver 0.0.0.0:8000
+```
 
 
 
